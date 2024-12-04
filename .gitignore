@@ -1,0 +1,17 @@
+bin
+dist
+build
+target
+node_modules
+vendor
+
+.env
+env.*
+
+.idea/*
+.idea*
+.DS_Store
+.vscode
+__debug*
+
+coverage.out
