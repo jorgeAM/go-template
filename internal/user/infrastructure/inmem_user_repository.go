@@ -3,24 +3,28 @@ package infrastructure
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 
-	"github.com/jorgeAM/base-api/internal/user"
+	"github.com/jorgeAM/base-api/internal/user/domain"
 )
 
-var _ user.UserRepository = (*InMemUserRepository)(nil)
+var _ domain.UserRepository = (*InMemUserRepository)(nil)
 
 type InMemUserRepository struct {
 	mux sync.RWMutex
 
-	items map[string]*user.User
+	items map[string]*domain.User
 }
 
 func NewInMemUserRepository() *InMemUserRepository {
-	return &InMemUserRepository{}
+	return &InMemUserRepository{
+		mux:   sync.RWMutex{},
+		items: map[string]*domain.User{},
+	}
 }
 
-func (i *InMemUserRepository) FindByID(ctx context.Context, id string) (*user.User, error) {
+func (i *InMemUserRepository) FindByID(ctx context.Context, id string) (*domain.User, error) {
 	user, ok := i.items[id]
 	if !ok {
 		return nil, errors.New("user not found")
@@ -29,11 +33,13 @@ func (i *InMemUserRepository) FindByID(ctx context.Context, id string) (*user.Us
 	return user, nil
 }
 
-func (i *InMemUserRepository) Save(ctx context.Context, user *user.User) error {
+func (i *InMemUserRepository) Save(ctx context.Context, user *domain.User) error {
 	i.mux.Lock()
 	defer i.mux.Unlock()
 
 	i.items[user.ID] = user
+
+	fmt.Println(i.items)
 
 	return nil
 }
