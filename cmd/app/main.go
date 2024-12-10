@@ -8,10 +8,10 @@ import (
 	"syscall"
 
 	"github.com/go-chi/chi/v5"
-	config "github.com/jorgeAM/base-api/cfg"
-	"github.com/jorgeAM/base-api/internal/platform/http/handler"
-	"github.com/jorgeAM/base-api/internal/platform/log"
-	"github.com/jorgeAM/base-api/internal/user"
+	config "github.com/jorgeAM/go-template/cfg"
+	"github.com/jorgeAM/go-template/internal/platform/http/handler"
+	"github.com/jorgeAM/go-template/internal/platform/log"
+	"github.com/jorgeAM/go-template/internal/user"
 )
 
 func startServer(cfg *config.Config, deps *config.Dependencies) error {
@@ -33,7 +33,7 @@ func startServer(cfg *config.Config, deps *config.Dependencies) error {
 }
 
 func main() {
-	logger, err := log.NewZapLogger("base-api", "local")
+	logger, err := log.NewZapLogger("go-template", "local")
 	if err != nil {
 		panic(err)
 	}

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/jorgeAM/base-api/internal/user/domain"
+	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
 var _ domain.UserRepository = (*InMemUserRepository)(nil)

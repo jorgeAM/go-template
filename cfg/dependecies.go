@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	userDomain "github.com/jorgeAM/base-api/internal/user/domain"
-	"github.com/jorgeAM/base-api/internal/user/infrastructure"
+	userDomain "github.com/jorgeAM/go-template/internal/user/domain"
+	"github.com/jorgeAM/go-template/internal/user/infrastructure"
 	_ "github.com/lib/pq"
 )
 
