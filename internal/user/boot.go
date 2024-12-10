@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/go-chi/chi/v5"
-	config "github.com/jorgeAM/base-api/cfg"
+	config "github.com/jorgeAM/go-template/cfg"
 )
 
 type Bootable struct {
