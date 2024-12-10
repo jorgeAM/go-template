@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//go:generate mockgen -source=./user.go -destination=../mock/user.go -package=mock -mock_names=Repository=MockUserRepository
 type UserRepository interface {
 	Save(ctx context.Context, user *User) error
 	FindByID(ctx context.Context, id string) (*User, error)
