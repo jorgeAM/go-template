@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	config "github.com/jorgeAM/base-api/cfg"
-	"github.com/jorgeAM/base-api/internal/platform/http/response"
-	"github.com/jorgeAM/base-api/internal/user/application"
+	config "github.com/jorgeAM/go-template/cfg"
+	"github.com/jorgeAM/go-template/internal/platform/http/response"
+	"github.com/jorgeAM/go-template/internal/user/application"
 )
 
 func createUser(_ *config.Config, deps *config.Dependencies) http.HandlerFunc {

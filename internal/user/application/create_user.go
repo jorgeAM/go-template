@@ -3,7 +3,7 @@ package application
 import (
 	"context"
 
-	"github.com/jorgeAM/base-api/internal/user/domain"
+	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
 type CreateUserCommand struct {
