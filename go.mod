@@ -1,4 +1,4 @@
-module github.com/jorgeAM/base-api
+module github.com/jorgeAM/go-template
 
 go 1.22.4
 

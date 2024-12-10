@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/jorgeAM/base-api/internal/user/domain"
-	"github.com/jorgeAM/base-api/internal/user/mock"
+	"github.com/jorgeAM/go-template/internal/user/domain"
+	"github.com/jorgeAM/go-template/internal/user/mock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )

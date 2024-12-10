@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/jorgeAM/base-api/internal/platform/env"
+	"github.com/jorgeAM/go-template/internal/platform/env"
 )
 
 type Config struct {
