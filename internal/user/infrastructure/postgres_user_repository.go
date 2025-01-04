@@ -20,10 +20,10 @@ type PostgresUserRepository struct {
 	table  string
 }
 
-func NewPostgresUserRepository(db *sqlx.DB, schema string) *PostgresUserRepository {
+func NewPostgresUserRepository(db *sqlx.DB) *PostgresUserRepository {
 	return &PostgresUserRepository{
 		db:     db,
-		schema: schema,
+		schema: "my_schema",
 		table:  "users",
 	}
 }
