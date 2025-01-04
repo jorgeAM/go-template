@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -17,13 +18,19 @@ type User struct {
 	Name     string
 	Email    string
 	Password string
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
 
 func NewUser(name, email, password string) *User {
 	return &User{
-		ID:       uuid.New().String(),
-		Name:     name,
-		Email:    email,
-		Password: password,
+		ID:        uuid.New().String(),
+		Name:      name,
+		Email:     email,
+		Password:  password,
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
 	}
 }

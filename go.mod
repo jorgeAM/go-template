@@ -3,6 +3,7 @@ module github.com/jorgeAM/go-template
 go 1.22.4
 
 require (
+	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/google/uuid v1.6.0
 	github.com/jmoiron/sqlx v1.4.0
