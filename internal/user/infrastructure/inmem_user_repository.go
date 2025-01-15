@@ -3,7 +3,6 @@ package infrastructure
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sync"
 
 	"github.com/jorgeAM/go-template/internal/user/domain"
@@ -38,8 +37,6 @@ func (i *InMemUserRepository) Save(ctx context.Context, user *domain.User) error
 	defer i.mux.Unlock()
 
 	i.items[user.ID] = user
-
-	fmt.Println(i.items)
 
 	return nil
 }
