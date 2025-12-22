@@ -1,0 +1,51 @@
+*.log
+*.out
+*.test
+*.exe
+coverage.out
+
+# Ignore local dependencies
+vendor/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# CI/CD and Git
+.github/
+.git/
+.gitignore
+
+# Docker files
+.dockerignore
+Dockerfile*
+
+# Environment and config files
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+bin/
+dist/
+build/
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Makefile
+Makefile

@@ -1,66 +1,57 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/go-chi/chi/v5"
 	config "github.com/jorgeAM/go-template/cfg"
-	"github.com/jorgeAM/go-template/internal/platform/http/handler"
-	"github.com/jorgeAM/go-template/internal/platform/log"
-	"github.com/jorgeAM/go-template/internal/user"
+	"github.com/jorgeAM/go-template/pkg/log"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func startServer(cfg *config.Config, deps *config.Dependencies) error {
-	router := chi.NewRouter()
-
-	router.Get("/health", handler.HealthCheck)
-
-	usersBoot, err := user.Boot(cfg, deps)
-	if err != nil {
-		return err
-	}
-
-	router.Route("/api/v1", func(r chi.Router) {
-		r.Route("/users", usersBoot.BuildRoutes)
-	})
+	router := buildRouter(cfg, deps)
 
 	return http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router)
 
 }
 
 func main() {
-	logger, err := log.NewZapLogger("go-template", "local")
-	if err != nil {
-		panic(err)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	if err := log.InitDefaultLogger(); err != nil {
+		log.Panic(ctx, "error initializing default logger", log.WithError(err))
 	}
 
-	logger.Info("[Config] Loading...")
+	log.Info(ctx, "[Config] Loading...")
 
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		panic(err)
+		log.Panic(ctx, "error loading config", log.WithError(err))
 	}
 
-	logger.Info("[Config] Finished")
-	logger.Info("[Dependencies] Building...")
+	log.Info(ctx, "[Config] Finished")
+	log.Info(ctx, "[Dependencies] Building...")
 
 	deps, err := config.BuildDependencies(cfg)
 	if err != nil {
-		panic(err)
+		log.Panic(ctx, "error building dependencies", log.WithError(err))
 	}
 
-	logger.Info("[Dependencies] Finished")
+	log.Info(ctx, "[Dependencies] Finished")
 
-	logger.Info("[App] Initializing")
+	log.Info(ctx, "[App] Initializing")
 	go func() {
-		logger.Info(fmt.Sprintf("[Server] Listening on %s", cfg.Port))
+		log.Info(ctx, fmt.Sprintf("[Server] Listening on %s", cfg.Port))
 
 		if err := startServer(cfg, deps); err != nil {
-			logger.Panic("error starting server")
+			log.Panic(ctx, "error starting server", log.WithError(err))
 		}
 	}()
 

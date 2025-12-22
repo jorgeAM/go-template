@@ -1,8 +1,6 @@
 package config
 
-import (
-	"github.com/jorgeAM/go-template/internal/platform/env"
-)
+import "github.com/jorgeAM/go-template/pkg/env"
 
 type Config struct {
 	Port                       string
@@ -20,7 +18,7 @@ func LoadConfig() (*Config, error) {
 		Port:                       env.GetEnv("PORT", "8080"),
 		PostgresHost:               env.GetEnv("POSTGRES_HOST", "localhost"),
 		PostgresPort:               env.GetEnv("POSTGRES_PORT", 5432),
-		PostgresDatabase:           env.GetEnv("POSTGRES_DB", "coderhouse"),
+		PostgresDatabase:           env.GetEnv("POSTGRES_DB", "db"),
 		PostgresUser:               env.GetEnv("POSTGRES_USER", "admin"),
 		PostgresPassword:           env.GetEnv("POSTGRES_PASSWORD", "passwd123"),
 		PostgresMaxIdleConnections: env.GetEnv("POSTGRES_MAX_IDLE_CONNECTIONS", 10),

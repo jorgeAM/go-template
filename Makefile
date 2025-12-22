@@ -15,7 +15,7 @@ tidy:
 	go mod vendor
 
 run:
-	go run cmd/app/main.go
+	go run cmd/app/*.go
 
 # Migrations
 postgres_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
