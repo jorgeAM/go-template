@@ -1,7 +1,8 @@
-package application
+package query
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jorgeAM/go-template/internal/user/domain"
 )
@@ -17,5 +18,9 @@ func NewGetUser(userRepository domain.UserRepository) *GetUser {
 }
 
 func (g *GetUser) Exec(ctx context.Context, userID string) (*domain.User, error) {
+	if userID == "" {
+		return nil, errors.New("user id cannot be empty")
+	}
+
 	return g.userRepository.FindByID(ctx, userID)
 }
