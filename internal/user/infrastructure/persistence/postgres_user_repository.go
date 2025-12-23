@@ -10,6 +10,8 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/jorgeAM/go-template/internal/user/domain"
+
+	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
 )
 
 var _ domain.UserRepository = (*PostgresUserRepository)(nil)
