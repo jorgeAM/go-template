@@ -33,6 +33,7 @@ func buildRouter(cfg *config.Config, deps *config.Dependencies) http.Handler {
 	router.Route("/api/v1", func(r chi.Router) {
 		r.Route("/user", func(r chi.Router) {
 			r.Post("/", userHandler.CreateUser(cfg, deps))
+			r.Get("/{id}", userHandler.GetUser(cfg, deps))
 		})
 	})
 
