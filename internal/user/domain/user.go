@@ -1,36 +1,79 @@
 package domain
 
 import (
-	"context"
-	"time"
+	"strings"
 
-	"github.com/google/uuid"
+	"github.com/jorgeAM/go-template/internal/shared/crypto"
+	"github.com/jorgeAM/go-template/internal/shared/errors"
+	"github.com/jorgeAM/go-template/internal/shared/model"
 )
 
-//go:generate go tool mockgen -source=./user.go -destination=../mock/user.go -package=mock -mock_names=Repository=MockUserRepository
-type UserRepository interface {
-	Save(ctx context.Context, user *User) error
-	FindByID(ctx context.Context, id string) (*User, error)
-}
+const minPasswordLength = 8
+
+var (
+	ErrUserInternal = errors.Define("user.internal_error")
+	ErrUserNotFound = errors.Define("user.not_found")
+	ErrInvalidUser  = errors.Define("user.invalid")
+)
 
 type User struct {
-	ID       string
-	Name     string
-	Email    string
-	Password string
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
+	id         model.ID
+	name       string
+	email      model.Email
+	password   string // bcrypt hash, never the plain password
+	timestamps model.Timestamps
 }
 
-func NewUser(name, email, password string) *User {
-	return &User{
-		ID:        uuid.New().String(),
-		Name:      name,
-		Email:     email,
-		Password:  password,
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+func NewUser(name, email, password string) (*User, error) {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return nil, errors.New(ErrInvalidUser, "name is required")
 	}
+
+	emailVO, err := model.NewEmail(email)
+	if err != nil {
+		return nil, errors.Wrap(ErrInvalidUser, err, "email is invalid")
+	}
+
+	if len(password) < minPasswordLength {
+		return nil, errors.New(
+			ErrInvalidUser,
+			"password is too short",
+			errors.WithMetadata("min_length", minPasswordLength),
+		)
+	}
+
+	hashed, err := crypto.HashPassword(password)
+	if err != nil {
+		return nil, errors.Wrap(ErrUserInternal, err, "failed to hash password")
+	}
+
+	return &User{
+		id:         model.GenerateUUID(),
+		name:       name,
+		email:      emailVO,
+		password:   hashed,
+		timestamps: model.NewTimestamps(),
+	}, nil
+}
+
+func (u *User) ID() model.ID {
+	return u.id
+}
+
+func (u *User) Name() string {
+	return u.name
+}
+
+func (u *User) Email() model.Email {
+	return u.email
+}
+
+// Password returns the bcrypt hash.
+func (u *User) Password() string {
+	return u.password
+}
+
+func (u *User) Timestamps() model.Timestamps {
+	return u.timestamps
 }

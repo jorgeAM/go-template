@@ -152,8 +152,8 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 
 ### User Management
 
-- `POST /api/v1/user` - Create a new user
-- `GET /api/v1/user/{id}` - Get user by ID
+- `POST /api/v1/user` - Create a new user (`201` with the created user, `400` on invalid data)
+- `GET /api/v1/user/{id}` - Get user by ID (`404` when it doesn't exist)
 
 **Create User Request:**
 
@@ -267,21 +267,20 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 ├── internal/user/              # User domain module (clean architecture)
 │   ├── module.go              # Module bootstrap: Init, RegisterHttp, MigrationFS
 │   ├── config.go              # Env vars this module needs
-│   ├── application/            # Use cases (commands and queries)
+│   ├── domain/                # User aggregate, invariants, repository interface, sentinel errors
+│   ├── app/                   # Use cases
 │   │   ├── command/           # Write operations (CreateUser)
-│   │   └── query/             # Read operations (GetUser)
-│   ├── domain/                # Business logic and entities
-│   ├── infrastructure/        # External concerns
-│   │   └── http/              # HTTP handlers
+│   │   ├── query/             # Read operations (GetUser)
+│   │   └── models/            # Output shapes (UserInfo, never the password hash)
+│   ├── api/http/              # openapi.yaml + oapi-codegen strict server (server.go)
 │   ├── adapters/db/           # sqlc scaffold: migrations/, queries/, generated sqlc/, repository
-│   └── mock/                  # Generated mocks for testing
+│   └── mocks/                 # Generated mocks for testing
 ├── internal/platform/          # I/O adapters shared across modules
 │   ├── db/                    # Transaction management
 │   ├── eventbus/              # Event publishers/listeners (in-memory, SNS, SQS)
 │   ├── http/                  # HTTP utilities
 │   │   ├── handler/           # Common HTTP handlers (health check)
 │   │   ├── middleware/        # Authentication, CORS, logging, timeout
-│   │   ├── response/          # Response helper functions
 │   │   └── restclient/        # REST client with retries
 │   ├── log/                   # Structured logging with Zap
 │   ├── mailer/                # Multi-provider email sending

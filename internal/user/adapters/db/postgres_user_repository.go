@@ -2,12 +2,13 @@ package db
 
 import (
 	"context"
-	"errors"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	platformdb "github.com/jorgeAM/go-template/internal/platform/db"
+	"github.com/jorgeAM/go-template/internal/shared/errors"
+	"github.com/jorgeAM/go-template/internal/shared/model"
 	"github.com/jorgeAM/go-template/internal/user/adapters/db/sqlc"
 	"github.com/jorgeAM/go-template/internal/user/domain"
 )
@@ -32,34 +33,53 @@ func (r *PostgresUserRepository) queries(ctx context.Context) *sqlc.Queries {
 }
 
 func (r *PostgresUserRepository) Save(ctx context.Context, user *domain.User) error {
-	return r.queries(ctx).SaveUser(ctx, sqlc.SaveUserParams{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Password:  user.Password,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-		DeletedAt: user.DeletedAt,
+	timestamps := user.Timestamps()
+
+	err := r.queries(ctx).SaveUser(ctx, sqlc.SaveUserParams{
+		ID:        user.ID().String(),
+		Name:      user.Name(),
+		Email:     user.Email().String(),
+		Password:  user.Password(),
+		CreatedAt: timestamps.CreatedAt,
+		UpdatedAt: timestamps.UpdatedAt,
+		DeletedAt: timestamps.DeletedAt,
 	})
-}
-
-func (r *PostgresUserRepository) FindByID(ctx context.Context, id string) (*domain.User, error) {
-	row, err := r.queries(ctx).FindUserByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.New("user not found")
-		}
-
-		return nil, err
+		return errors.Wrap(
+			domain.ErrUserInternal,
+			err,
+			"an error occurred while saving the user",
+			errors.WithMetadata("id", user.ID().String()),
+		)
 	}
 
-	return &domain.User{
-		ID:        row.ID,
-		Name:      row.Name,
-		Email:     row.Email,
-		Password:  row.Password,
-		CreatedAt: row.CreatedAt,
-		UpdatedAt: row.UpdatedAt,
-		DeletedAt: row.DeletedAt,
-	}, nil
+	return nil
+}
+
+func (r *PostgresUserRepository) FindByID(ctx context.Context, id model.ID) (*domain.User, error) {
+	row, err := r.queries(ctx).FindUserByID(ctx, id.String())
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errors.Wrap(domain.ErrUserNotFound, err, "user not found", errors.WithMetadata("id", id.String()))
+		}
+
+		return nil, errors.Wrap(
+			domain.ErrUserInternal,
+			err,
+			"an error occurred while retrieving the user",
+			errors.WithMetadata("id", id.String()),
+		)
+	}
+
+	return domain.UnmarshallUser(
+		model.ID(row.ID),
+		row.Name,
+		model.Email(row.Email),
+		row.Password,
+		model.Timestamps{
+			CreatedAt: row.CreatedAt,
+			UpdatedAt: row.UpdatedAt,
+			DeletedAt: row.DeletedAt,
+		},
+	), nil
 }
