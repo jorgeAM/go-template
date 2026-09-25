@@ -1,5 +1,7 @@
 BEGIN;
 
+CREATE SCHEMA IF NOT EXISTS my_schema;
+
 CREATE TABLE IF NOT EXISTS my_schema.users
 (
     id uuid PRIMARY KEY,

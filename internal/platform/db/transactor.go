@@ -2,17 +2,11 @@ package db
 
 import (
 	"context"
-
-	"github.com/jmoiron/sqlx"
 )
 
+// TxKey is the context key a Transactor stores the open transaction under, so
+// repositories can join it instead of using the pool directly.
 type TxKey string
-
-type DBOrTx interface {
-	sqlx.ExtContext
-	GetContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
-	SelectContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
-}
 
 //go:generate go tool mockgen -source=./transactor.go -destination=./mocks/transactor.go -package=mock -mock_names=Transactor=MockTransactor
 type Transactor interface {

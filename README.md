@@ -14,7 +14,7 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 - **Configuration Management**: Type-safe environment variable loading with defaults and validation
 - **Logging**: Structured logging with Zap integration and context-aware request tracking
 - **HTTP Routing**: Chi v5 router with comprehensive middleware stack
-- **Database Integration**: PostgreSQL with `sqlx` and `goqu` query builder for type-safe SQL
+- **Database Integration**: PostgreSQL with `pgx` and `sqlc`-generated, type-safe queries
 - **Migration System**: Database migrations using golang-migrate with up/down support
 
 ### Security & Authentication
@@ -32,12 +32,12 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 - **Pagination**: Built-in page and page_size validation with offset calculation
 - **Ordering**: ASC/DESC ordering with field validation
 - **Query Parameter Parsing**: Automatic conversion from HTTP query parameters to criteria objects
-- **Type-safe SQL Generation**: Goqu-based query building with prepared statements
+- **Type-safe SQL Generation**: hand-written SQL compiled to Go by `sqlc`
 
 ### Utility Packages (15+ packages)
 
 - **Collections**: Generic utilities for data manipulation (chunking for batch processing)
-- **Criteria**: Advanced query filtering, pagination, and ordering system with PostgreSQL converter
+- **Criteria**: Advanced query filtering, pagination, and ordering system
 - **Events**: Complete event bus system with in-memory and AWS SNS/SQS implementations
 - **Mailer**: Multi-provider email sending (SendGrid, AWS SES, in-memory for testing)
 - **Storage**: Cloud storage integration (Cloudflare R2 presigned URLs with content type validation)
@@ -117,7 +117,6 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
     POSTGRES_DB=mydb
     POSTGRES_USER=admin
     POSTGRES_PASSWORD=passwd123
-    POSTGRES_MAX_IDLE_CONNECTIONS=10
     POSTGRES_MAX_OPEN_CONNECTIONS=30
 
     # JWT Configuration
@@ -247,10 +246,6 @@ criteria, err := criteria.FromPrimitive(&criteria.CriteriaPrimitive{
     Page:      1,
     PageSize:  10,
 })
-
-// Convert to PostgreSQL query
-converter := criteria.NewCriteriaToPostgresConverter()
-sql, args, err := converter.Convert(ctx, "users", criteria)
 ```
 
 ### Cloud Storage
@@ -276,9 +271,9 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 │   │   ├── command/           # Write operations (CreateUser)
 │   │   └── query/             # Read operations (GetUser)
 │   ├── domain/                # Business logic and entities
-│   ├── infrastructure/        # External concerns (HTTP handlers, persistence)
-│   │   ├── http/              # HTTP handlers
-│   │   └── persistence/       # Database repositories + embedded migrations/
+│   ├── infrastructure/        # External concerns
+│   │   └── http/              # HTTP handlers
+│   ├── adapters/db/           # sqlc scaffold: migrations/, queries/, generated sqlc/, repository
 │   └── mock/                  # Generated mocks for testing
 ├── internal/platform/          # I/O adapters shared across modules
 │   ├── db/                    # Transaction management
@@ -309,10 +304,11 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 
 ## Key Dependencies
 
-- **Go 1.25.4** - Latest Go version
+- **Go 1.26.5** - Latest Go version
 - **Chi v5** - Lightweight HTTP router
 - **Zap** - Structured logging
-- **sqlx + goqu** - Database operations and query building
+- **pgx + sqlc** - PostgreSQL driver and type-safe query generation
+- **golang-migrate** - Per-module migrations (`cmd/migrate`)
 - **AWS SDK v2** - S3, SES, SNS, SQS integration
 - **golang-jwt** - JWT token handling
 - **bcrypt** - Password hashing
