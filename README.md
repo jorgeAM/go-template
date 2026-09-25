@@ -276,24 +276,27 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 │   │   ├── http/              # HTTP handlers
 │   │   └── persistence/       # Database repositories
 │   └── mock/                  # Generated mocks for testing
-├── pkg/                       # Reusable packages (15+ utilities)
-│   ├── collections/           # Generic utilities (chunking, key-by operations)
-│   ├── criteria/              # Advanced query filtering, pagination, ordering
-│   ├── crypto/                # JWT and password utilities
-│   ├── db/                    # Database utilities and transaction management
-│   ├── env/                   # Environment variable loading with type safety
-│   ├── errors/                # Custom error types with metadata and error codes
-│   ├── events/                # Event bus system (in-memory, SNS, SQS)
-│   ├── http/                  # HTTP utilities, middleware, response helpers
+├── internal/platform/          # I/O adapters shared across modules
+│   ├── db/                    # Transaction management
+│   ├── eventbus/              # Event publishers/listeners (in-memory, SNS, SQS)
+│   ├── http/                  # HTTP utilities
 │   │   ├── handler/           # Common HTTP handlers (health check)
 │   │   ├── middleware/        # Authentication, CORS, logging, timeout
-│   │   └── response/          # Response helper functions
+│   │   ├── response/          # Response helper functions
+│   │   └── restclient/        # REST client with retries
 │   ├── log/                   # Structured logging with Zap
 │   ├── mailer/                # Multi-provider email sending
-│   ├── model/                 # Value objects (Country, Currency, Email, etc.)
-│   ├── pin/                   # Cryptographically secure PIN generation
-│   ├── ref/                   # Pointer utility functions
 │   └── storage/               # Cloud storage (Cloudflare R2 presigned URLs)
+├── internal/shared/            # Domain-agnostic types, zero I/O
+│   ├── collections/           # Generic utilities (chunking, key-by operations)
+│   ├── criteria/              # Query filtering, pagination, ordering
+│   ├── crypto/                # JWT and password utilities
+│   ├── env/                   # Environment variable loading with type safety
+│   ├── errors/                # Custom error types with metadata and error codes
+│   ├── events/                # Domain event, topic and collector
+│   ├── generator/             # Cryptographically secure PIN generation
+│   ├── model/                 # Value objects (Country, Currency, Email, etc.)
+│   └── ref/                   # Pointer utility functions
 ├── database/migration/         # Database migrations (up/down SQL files)
 ├── cfg/                       # Configuration management and dependency injection
 │   ├── config.go              # Environment-based configuration loading

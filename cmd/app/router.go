@@ -7,9 +7,9 @@ import (
 	httpin_integration "github.com/ggicci/httpin/integration"
 	"github.com/go-chi/chi/v5"
 	config "github.com/jorgeAM/go-template/cfg"
+	"github.com/jorgeAM/go-template/internal/platform/http/handler"
+	"github.com/jorgeAM/go-template/internal/platform/http/middleware"
 	userHandler "github.com/jorgeAM/go-template/internal/user/infrastructure/http"
-	"github.com/jorgeAM/go-template/pkg/http/handler"
-	"github.com/jorgeAM/go-template/pkg/http/middleware"
 )
 
 func buildRouter(cfg *config.Config, deps *config.Dependencies) http.Handler {

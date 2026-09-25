@@ -1,6 +1,6 @@
 package config
 
-import "github.com/jorgeAM/go-template/pkg/env"
+import "github.com/jorgeAM/go-template/internal/shared/env"
 
 type Config struct {
 	Port                       string

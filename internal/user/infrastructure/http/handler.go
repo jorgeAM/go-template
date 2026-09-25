@@ -6,9 +6,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	config "github.com/jorgeAM/go-template/cfg"
+	"github.com/jorgeAM/go-template/internal/platform/http/response"
 	"github.com/jorgeAM/go-template/internal/user/application/command"
 	"github.com/jorgeAM/go-template/internal/user/application/query"
-	"github.com/jorgeAM/go-template/pkg/http/response"
 )
 
 func CreateUser(_ *config.Config, deps *config.Dependencies) http.HandlerFunc {
