@@ -19,9 +19,6 @@ import (
 	"github.com/jorgeAM/go-template/internal/shared/env"
 )
 
-// Command migrate applies every module's pending up migrations, walking the
-// same bootstrap.Modules() list cmd/app boots from. Each module tracks its
-// version in its own schema_migrations_<name> table so modules stay independent.
 func main() {
 	ctx := context.Background()
 

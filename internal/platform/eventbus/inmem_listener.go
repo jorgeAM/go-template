@@ -10,18 +10,16 @@ import (
 var _ Listener = (*InMemoryListener)(nil)
 
 type InMemoryListener struct {
-	bus      *InMemoryEventBus
-	handlers map[events.Topic]Handler
-
-	// events without handler
-	missed []*events.Event
+	bus       *InMemoryEventBus
+	handlers  map[events.Topic]Handler
+	unhandled []*events.Event
 }
 
 func NewInMemoryListener(handlers map[events.Topic]Handler) *InMemoryListener {
 	return &InMemoryListener{
-		bus:      getInMemoryEventBus(),
-		handlers: handlers,
-		missed:   []*events.Event{},
+		bus:       getInMemoryEventBus(),
+		handlers:  handlers,
+		unhandled: []*events.Event{},
 	}
 }
 
@@ -36,7 +34,7 @@ func (i *InMemoryListener) Listen(ctx context.Context) {
 				handler, ok := i.handlers[event.Topic]
 				if !ok {
 					log.Warn(ctx, "event don't have handler", log.WithString("topic", event.Topic.String()), log.WithObject("event", event))
-					i.missed = append(i.missed, event)
+					i.unhandled = append(i.unhandled, event)
 					continue
 				}
 

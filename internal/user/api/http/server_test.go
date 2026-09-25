@@ -116,7 +116,7 @@ func TestServer(t *testing.T) {
 
 			assert.Equal(t, tt.wantStatus, rec.Code)
 			assert.NotContains(t, rec.Body.String(), "password")
-			assert.NotContains(t, rec.Body.String(), user.Password())
+			assert.NotContains(t, rec.Body.String(), user.HashedPassword())
 
 			if tt.wantCode != "" {
 				var body Error

@@ -17,11 +17,11 @@ var (
 )
 
 type User struct {
-	id         model.ID
-	name       string
-	email      model.Email
-	password   string // bcrypt hash, never the plain password
-	timestamps model.Timestamps
+	id             model.ID
+	name           string
+	email          model.Email
+	hashedPassword string
+	timestamps     model.Timestamps
 }
 
 func NewUser(name, email, password string) (*User, error) {
@@ -49,11 +49,11 @@ func NewUser(name, email, password string) (*User, error) {
 	}
 
 	return &User{
-		id:         model.GenerateUUID(),
-		name:       name,
-		email:      emailVO,
-		password:   hashed,
-		timestamps: model.NewTimestamps(),
+		id:             model.GenerateUUID(),
+		name:           name,
+		email:          emailVO,
+		hashedPassword: hashed,
+		timestamps:     model.NewTimestamps(),
 	}, nil
 }
 
@@ -69,9 +69,8 @@ func (u *User) Email() model.Email {
 	return u.email
 }
 
-// Password returns the bcrypt hash.
-func (u *User) Password() string {
-	return u.password
+func (u *User) HashedPassword() string {
+	return u.hashedPassword
 }
 
 func (u *User) Timestamps() model.Timestamps {

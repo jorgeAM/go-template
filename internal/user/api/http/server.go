@@ -30,8 +30,8 @@ func NewServer(userRepository domain.UserRepository) *Server {
 
 func Register(_ context.Context, r chi.Router, userRepository domain.UserRepository) error {
 	handler := NewStrictHandlerWithOptions(NewServer(userRepository), nil, StrictHTTPServerOptions{
-		RequestErrorHandlerFunc:  writeError(http.StatusBadRequest, errors.BadRequestCode),
-		ResponseErrorHandlerFunc: writeError(http.StatusInternalServerError, errors.InternalCode),
+		RequestErrorHandlerFunc:  jsonErrorHandler(http.StatusBadRequest, errors.BadRequestCode),
+		ResponseErrorHandlerFunc: jsonErrorHandler(http.StatusInternalServerError, errors.InternalCode),
 	})
 
 	HandlerFromMux(handler, r)
@@ -95,9 +95,7 @@ func internalError(err error) InternalErrorJSONResponse {
 	return InternalErrorJSONResponse{Code: errors.InternalCode.String(), Message: err.Error()}
 }
 
-// writeError keeps oapi-codegen's own failures (bad JSON body, unexpected
-// response type) in the same JSON Error shape as every other response.
-func writeError(status int, code errors.Code) func(http.ResponseWriter, *http.Request, error) {
+func jsonErrorHandler(status int, code errors.Code) func(http.ResponseWriter, *http.Request, error) {
 	return func(w http.ResponseWriter, _ *http.Request, err error) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(status)

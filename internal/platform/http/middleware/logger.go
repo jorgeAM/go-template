@@ -19,7 +19,6 @@ func (w *statusResponseWriter) WriteHeader(code int) {
 }
 
 func wrapResponseWriter(w http.ResponseWriter) *statusResponseWriter {
-	// Default to 200 OK unless changed
 	return &statusResponseWriter{w, http.StatusOK}
 }
 

@@ -44,8 +44,8 @@ func TestNewUser(t *testing.T) {
 			assert.Equal(t, strings.TrimSpace(tt.userName), user.Name())
 			assert.Equal(t, model.Email("jorge@example.com"), user.Email())
 			assert.NotEmpty(t, user.ID())
-			assert.NotEqual(t, tt.password, user.Password())
-			assert.True(t, crypto.ComparePassword(user.Password(), tt.password))
+			assert.NotEqual(t, tt.password, user.HashedPassword())
+			assert.True(t, crypto.ComparePassword(user.HashedPassword(), tt.password))
 			assert.False(t, user.Timestamps().CreatedAt.IsZero())
 		})
 	}

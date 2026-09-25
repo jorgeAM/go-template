@@ -62,7 +62,6 @@ func (m *Module) Init(ctx context.Context) (err error) {
 		}
 	}()
 
-	// pgxpool connects lazily; ping so a bad DSN fails at startup, not on the first request.
 	if err = pool.Ping(ctx); err != nil {
 		log.Error(ctx, "user module failed to connect to postgres", log.WithError(err))
 		return err

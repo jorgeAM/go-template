@@ -8,8 +8,6 @@ import (
 type FailAtFunc func(req Request, res Response) error
 
 func defaultFailAt(req Request, res Response) error {
-	// 5xx status codes are not considered as errors.
-	// It's the default behavior of Resty.
 	return res.Err()
 }
 

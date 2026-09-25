@@ -25,8 +25,6 @@ func NewCreateUser(userRepository domain.UserRepository) *CreateUser {
 }
 
 func (c *CreateUser) Handle(ctx context.Context, cmd *CreateUserCommand) (*models.UserInfo, error) {
-	// NewUser already returns a structured domain error (ErrInvalidUser/ErrUserInternal)
-	// whose message is safe to show the caller, so it is returned as is.
 	user, err := domain.NewUser(cmd.Name, cmd.Email, cmd.Password)
 	if err != nil {
 		return nil, err

@@ -6,7 +6,6 @@ import (
 	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
-// UserInfo is the read shape of a user; it never carries the password hash.
 type UserInfo struct {
 	ID        string
 	Name      string

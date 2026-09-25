@@ -23,7 +23,6 @@ func NewPostgresUserRepository(db *pgxpool.Pool) *PostgresUserRepository {
 	return &PostgresUserRepository{db: db}
 }
 
-// queries joins the transaction a platformdb.Transactor put in ctx, if any.
 func (r *PostgresUserRepository) queries(ctx context.Context) *sqlc.Queries {
 	if tx, ok := ctx.Value(platformdb.TxKey("tx")).(pgx.Tx); ok {
 		return sqlc.New(tx)
@@ -39,7 +38,7 @@ func (r *PostgresUserRepository) Save(ctx context.Context, user *domain.User) er
 		ID:        user.ID().String(),
 		Name:      user.Name(),
 		Email:     user.Email().String(),
-		Password:  user.Password(),
+		Password:  user.HashedPassword(),
 		CreatedAt: timestamps.CreatedAt,
 		UpdatedAt: timestamps.UpdatedAt,
 		DeletedAt: timestamps.DeletedAt,
