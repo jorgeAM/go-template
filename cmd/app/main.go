@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	config "github.com/jorgeAM/go-template/cfg"
-	"github.com/jorgeAM/go-template/pkg/log"
+	"github.com/jorgeAM/go-template/internal/platform/log"
 
 	_ "github.com/joho/godotenv/autoload"
 )
