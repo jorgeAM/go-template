@@ -6,10 +6,12 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 
 ### Core Architecture
 
-- **Clean Architecture**: Domain-driven design with clear separation of concerns (Domain, Application, Infrastructure layers)
+- **Modular Monolith**: Each business module lives in `internal/<module>/` and implements `module.Module` (`Name`, `Init`, `RegisterHttp`, `MigrationFS`); modules are registered in `internal/bootstrap`
+- **Hexagonal Architecture**: Each module splits into `domain/`, `app/`, `api/` (driving adapters) and `adapters/` (driven adapters)
 - **CQRS Pattern**: Separate command and query handlers for better separation of concerns
 - **Repository Pattern**: Domain-driven repository interfaces with clean abstractions
-- **Dependency Injection**: Configuration-based dependency management
+- **Module-owned Wiring**: Each module builds its own dependencies in `module.go` `Init()` from its own `config.go`
+- **OpenAPI-first HTTP**: Per-module `openapi.yaml` compiled to a chi strict server by `oapi-codegen`
 - **Structured Project Layout**: Organized folder structure following Go best practices
 - **Configuration Management**: Type-safe environment variable loading with defaults and validation
 - **Logging**: Structured logging with Zap integration and context-aware request tracking
@@ -21,7 +23,7 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 
 - **Password Hashing**: Secure bcrypt password hashing and comparison
 - **JWT Authentication**: Complete JWT system with token generation, validation, and type checking
-- **Authentication Middleware**: Bearer token validation with automatic user context injection
+- **Authentication Middleware**: Bearer token validation with automatic user context injection (available in `middleware.Authenticate`, not mounted by default)
 - **Cookie Management**: Secure refresh token handling with HttpOnly and SameSite protection
 - **CORS Support**: Configurable cross-origin resource sharing with flexible origin/method control
 - **Request Security**: Request ID tracking, real IP detection, configurable timeout protection
@@ -79,11 +81,13 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 - **CORS**: Configurable cross-origin resource sharing
 - **Response Headers**: Automatic Content-Type and Accept header injection
 - **Timeout Management**: Per-request timeout with X-Timeout header support (default 15s)
-- **Authentication**: JWT Bearer token validation with user context injection
+
+`middleware.Authenticate` (JWT Bearer validation with user context injection) is available but not mounted in `cmd/app/router.go`; add it to the routes that need it.
 
 ### Development Tools
 
 - **Mock Generation**: Automated mock generation using `go.uber.org/mock` with `//go:generate` directives
+- **SQL & API Codegen**: `sqlc` and `oapi-codegen`, pinned as Go tools (`go tool`)
 - **Test Coverage**: Built-in coverage reporting with browser display
 - **Docker Support**: Multi-stage Docker build with distroless base image for security
 - **Code Generation**: Go generate integration for mocks and other generated code
@@ -179,18 +183,18 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 
 ### Query Parameters Support
 
-The API supports advanced querying through URL parameters:
+The `criteria` package (`criteria.CriteriaInput`) can bind these URL parameters for list endpoints. No endpoint uses it yet:
 
 - `order_by` - Field to order by
 - `order_type` - ASC or DESC
 - `page` - Page number (starts from 1)
 - `page_size` - Number of items per page
 
-Example: `GET /api/v1/users?order_by=created_at&order_type=DESC&page=1&page_size=10`
+Example for a list endpoint: `?order_by=created_at&order_type=DESC&page=1&page_size=10`
 
 ## Available Make Commands
 
-- `make generate` - Run go generate for mock generation
+- `make generate` - Run go generate (sqlc, oapi-codegen, mockgen)
 - `make unit-tests` - Run tests with coverage reporting
 - `make show-cover` - Display test coverage in browser
 - `make tidy` - Tidy and vendor dependencies
@@ -214,7 +218,7 @@ if err != nil {
 }
 
 // Publish to SNS
-publisher := events.NewSNSPublisher(snsClient, topicArn)
+publisher := eventbus.NewSNSPublisher(snsClient, topicArn)
 err = publisher.Publish(ctx, event)
 ```
 
@@ -222,14 +226,14 @@ err = publisher.Publish(ctx, event)
 
 ```go
 // Using SendGrid
-mailer := mailer.NewSendgridMailer(sendgridClient)
+sender := mailer.NewSendgridMailer(sendgridClient)
 payload := &mailer.MailerPayload{
     From:    "noreply@example.com",
     To:      "user@example.com",
     Subject: "Welcome!",
     Body:    "<h1>Welcome to our service!</h1>",
 }
-err := mailer.Send(ctx, payload)
+err := sender.Send(ctx, payload)
 ```
 
 ### Advanced Querying
@@ -252,8 +256,12 @@ criteria, err := criteria.FromPrimitive(&criteria.CriteriaPrimitive{
 
 ```go
 // Generate presigned URL for file upload
-signer := storage.NewCloudflareR2Client(bucketName, accessKey, secretKey, endpoint)
-url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
+signer, err := storage.NewCloudflareR2Client(bucketName, accessKey, secretKey, endpoint)
+if err != nil {
+    return err
+}
+
+url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.IMAGE_JPEG)
 ```
 
 ## Project Structure
@@ -293,6 +301,7 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 │   ├── errors/                # Custom error types with metadata and error codes
 │   ├── events/                # Domain event, topic and collector
 │   ├── generator/             # Cryptographically secure PIN generation
+│   ├── module/                # module.Module interface every module implements
 │   ├── ref/                   # Pointer utility functions
 │   └── valueobject/           # Value objects (Email, ID, Timestamps)
 ├── vendor/                    # Vendored dependencies
@@ -307,6 +316,8 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 - **Chi v5** - Lightweight HTTP router
 - **Zap** - Structured logging
 - **pgx + sqlc** - PostgreSQL driver and type-safe query generation
+- **oapi-codegen** - OpenAPI → chi strict server generation
+- **httpin** - HTTP request input binding
 - **golang-migrate** - Per-module migrations (`cmd/migrate`)
 - **AWS SDK v2** - S3, SES, SNS, SQS integration
 - **golang-jwt** - JWT token handling
