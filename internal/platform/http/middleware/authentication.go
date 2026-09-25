@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -93,5 +94,5 @@ func GetPrincipalFromContext(ctx context.Context) (*Principal, bool) {
 func errorHandler(w http.ResponseWriter, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnauthorized)
-	w.Write([]byte(fmt.Sprintf(`{"message":"%s"}`, message)))
+	_ = json.NewEncoder(w).Encode(map[string]string{"message": message})
 }
