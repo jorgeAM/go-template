@@ -14,7 +14,7 @@ import (
 	reflect "reflect"
 
 	domain "github.com/jorgeAM/go-template/internal/identity/domain"
-	model "github.com/jorgeAM/go-template/internal/shared/model"
+	valueobject "github.com/jorgeAM/go-template/internal/shared/valueobject"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -43,7 +43,7 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // FindByID mocks base method.
-func (m *MockUserRepository) FindByID(ctx context.Context, id model.ID) (*domain.User, error) {
+func (m *MockUserRepository) FindByID(ctx context.Context, id valueobject.ID) (*domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", ctx, id)
 	ret0, _ := ret[0].(*domain.User)

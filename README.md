@@ -45,7 +45,7 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 - **Database**: Transaction management interface and connection handling
 - **Error Handling**: Custom error types with error codes, cause tracking, and metadata support
 - **Crypto**: JWT utilities and secure password hashing
-- **Model**: Value objects (Country, Currency, Email with regex validation, UUID, timestamps)
+- **Value objects**: Email with regex validation, UUID ID, timestamps
 - **Environment**: Type-safe environment variable loading for int, string, bool types
 - **PIN**: Cryptographically secure 4-digit PIN generation
 - **Reference**: Generic pointer utility functions
@@ -293,8 +293,8 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 │   ├── errors/                # Custom error types with metadata and error codes
 │   ├── events/                # Domain event, topic and collector
 │   ├── generator/             # Cryptographically secure PIN generation
-│   ├── model/                 # Value objects (Country, Currency, Email, etc.)
-│   └── ref/                   # Pointer utility functions
+│   ├── ref/                   # Pointer utility functions
+│   └── valueobject/           # Value objects (Email, ID, Timestamps)
 ├── vendor/                    # Vendored dependencies
 ├── Dockerfile                 # Multi-stage Docker build with distroless base
 ├── Makefile                   # Development and deployment commands

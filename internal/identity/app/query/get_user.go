@@ -6,7 +6,7 @@ import (
 	"github.com/jorgeAM/go-template/internal/identity/app/models"
 	"github.com/jorgeAM/go-template/internal/identity/domain"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/shared/model"
+	"github.com/jorgeAM/go-template/internal/shared/valueobject"
 )
 
 type GetUserQuery struct {
@@ -24,7 +24,7 @@ func NewGetUser(userRepository domain.UserRepository) *GetUser {
 }
 
 func (g *GetUser) Handle(ctx context.Context, q *GetUserQuery) (*models.UserInfo, error) {
-	userID, err := model.NewID(q.UserID)
+	userID, err := valueobject.NewID(q.UserID)
 	if err != nil {
 		return nil, errors.Wrap(domain.ErrInvalidUser, err, "invalid user id", errors.WithMetadata("id", q.UserID))
 	}

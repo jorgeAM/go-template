@@ -30,10 +30,10 @@ just common vocabulary every module speaks.
 ## Example package
 - `internal/shared/errors/` — `Error`, `ErrorCode`, `Define`, `Wrap`, `WithMetadata`
 - `internal/shared/criteria/` — filters, ordering and pagination
-- `internal/shared/model/email.go` — Email value object
-- `internal/shared/model/id.go` — ID value object
+- `internal/shared/valueobject/email.go` — Email value object
+- `internal/shared/valueobject/id.go` — ID value object
 
-One package per concept (`error`, `pagination`, `valueobject`), not one
+One package per concept (`errors`, `criteria`, `valueobject`), not one
 package per type — a new value object is a new file inside `valueobject/`,
 not a new sub-package, unless it grows large enough to need its own
 internal helpers.

@@ -8,7 +8,7 @@ import (
 
 	"github.com/jorgeAM/go-template/internal/shared/crypto"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/shared/model"
+	"github.com/jorgeAM/go-template/internal/shared/valueobject"
 )
 
 func TestNewUser(t *testing.T) {
@@ -42,7 +42,7 @@ func TestNewUser(t *testing.T) {
 
 			assert.NoError(t, err)
 			assert.Equal(t, strings.TrimSpace(tt.userName), user.Name())
-			assert.Equal(t, model.Email("jorge@example.com"), user.Email())
+			assert.Equal(t, valueobject.Email("jorge@example.com"), user.Email())
 			assert.NotEmpty(t, user.ID())
 			assert.NotEqual(t, tt.password, user.HashedPassword())
 			assert.True(t, crypto.ComparePassword(user.HashedPassword(), tt.password))

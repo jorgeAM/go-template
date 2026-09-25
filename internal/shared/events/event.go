@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/jorgeAM/go-template/internal/shared/model"
+	"github.com/jorgeAM/go-template/internal/shared/valueobject"
 )
 
 var (
@@ -36,7 +36,7 @@ func NewEvent(
 	}
 
 	return &Event{
-		ID:        model.GenerateUUID().String(),
+		ID:        valueobject.GenerateUUID().String(),
 		Topic:     eventTopic,
 		Payload:   payload,
 		Timestamp: time.Now(),

@@ -47,7 +47,7 @@ See `.claude/rules/folder-structure.md` and `.claude/rules/domain-layer.md`.
   `mailer` (SES, SendGrid, in-memory), `storage` (Cloudflare R2 presigned URLs).
   See `.claude/rules/platform-folder-structure.md`.
 - `internal/shared/` — zero-dependency types: `errors` (sentinel `ErrorCode` + `Error`),
-  `model` (`ID`, `Email`, `Timestamps`, …), `criteria`, `events`, `module`, `crypto`, `env`,
+  `valueobject` (`ID`, `Email`, `Timestamps`), `criteria`, `events`, `module`, `crypto`, `env`,
   `collections`, `generator`, `ref`. See `.claude/rules/shared-folder-structure.md`.
 
 ## Commands

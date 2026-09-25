@@ -10,7 +10,7 @@ import (
 	"github.com/jorgeAM/go-template/internal/identity/domain"
 	platformdb "github.com/jorgeAM/go-template/internal/platform/db"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/shared/model"
+	"github.com/jorgeAM/go-template/internal/shared/valueobject"
 )
 
 var _ domain.UserRepository = (*PostgresUserRepository)(nil)
@@ -55,7 +55,7 @@ func (r *PostgresUserRepository) Save(ctx context.Context, user *domain.User) er
 	return nil
 }
 
-func (r *PostgresUserRepository) FindByID(ctx context.Context, id model.ID) (*domain.User, error) {
+func (r *PostgresUserRepository) FindByID(ctx context.Context, id valueobject.ID) (*domain.User, error) {
 	row, err := r.queries(ctx).FindUserByID(ctx, id.String())
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -71,11 +71,11 @@ func (r *PostgresUserRepository) FindByID(ctx context.Context, id model.ID) (*do
 	}
 
 	return domain.UnmarshallUser(
-		model.ID(row.ID),
+		valueobject.ID(row.ID),
 		row.Name,
-		model.Email(row.Email),
+		valueobject.Email(row.Email),
 		row.Password,
-		model.Timestamps{
+		valueobject.Timestamps{
 			CreatedAt: row.CreatedAt,
 			UpdatedAt: row.UpdatedAt,
 			DeletedAt: row.DeletedAt,

@@ -1,13 +1,7 @@
-package model
+package valueobject
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
-)
-
-var (
-	ErrInvalidID = errors.New("invalid id")
 )
 
 type ID string

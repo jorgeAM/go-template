@@ -5,7 +5,7 @@ import (
 
 	"github.com/jorgeAM/go-template/internal/shared/crypto"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/shared/model"
+	"github.com/jorgeAM/go-template/internal/shared/valueobject"
 )
 
 const minPasswordLength = 8
@@ -17,11 +17,11 @@ var (
 )
 
 type User struct {
-	id             model.ID
+	id             valueobject.ID
 	name           string
-	email          model.Email
+	email          valueobject.Email
 	hashedPassword string
-	timestamps     model.Timestamps
+	timestamps     valueobject.Timestamps
 }
 
 func NewUser(name, email, password string) (*User, error) {
@@ -30,7 +30,7 @@ func NewUser(name, email, password string) (*User, error) {
 		return nil, errors.New(ErrInvalidUser, "name is required")
 	}
 
-	emailVO, err := model.NewEmail(email)
+	emailVO, err := valueobject.NewEmail(email)
 	if err != nil {
 		return nil, errors.Wrap(ErrInvalidUser, err, "email is invalid")
 	}
@@ -49,15 +49,15 @@ func NewUser(name, email, password string) (*User, error) {
 	}
 
 	return &User{
-		id:             model.GenerateUUID(),
+		id:             valueobject.GenerateUUID(),
 		name:           name,
 		email:          emailVO,
 		hashedPassword: hashed,
-		timestamps:     model.NewTimestamps(),
+		timestamps:     valueobject.NewTimestamps(),
 	}, nil
 }
 
-func (u *User) ID() model.ID {
+func (u *User) ID() valueobject.ID {
 	return u.id
 }
 
@@ -65,7 +65,7 @@ func (u *User) Name() string {
 	return u.name
 }
 
-func (u *User) Email() model.Email {
+func (u *User) Email() valueobject.Email {
 	return u.email
 }
 
@@ -73,6 +73,6 @@ func (u *User) HashedPassword() string {
 	return u.hashedPassword
 }
 
-func (u *User) Timestamps() model.Timestamps {
+func (u *User) Timestamps() valueobject.Timestamps {
 	return u.timestamps
 }
