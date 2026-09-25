@@ -108,8 +108,8 @@ Read and fill `.github/PULL_REQUEST_TEMPLATE.md` verbatim. **CRITICAL: Preserve 
 |---------|-------------|
 | **Summary** | 2-4 bullets summarizing changes from commit messages |
 | **Reviewer Notes** | Help reviewers focus by grouping relevant files into business logic vs config/generated/low-risk. Include changed-file count context, low-risk-heavy areas, and highest-signal files to review. |
-| **Test Plan** | Ask user OR derive from changes (e.g., "Unit tests added for X"); always include `make test` as verification step |
-| **Checklist** | Mark `[x]` for: self-reviewed (always), tests (if tests changed), `make test` passes (if run), no secrets committed (always) |
+| **Test Plan** | Ask user OR derive from changes (e.g., "Unit tests added for X"); always include `make unit-tests` as verification step |
+| **Checklist** | Mark `[x]` for: self-reviewed (always), tests (if tests changed), `make unit-tests` passes (if run), no secrets committed (always) |
 | **Schema / interface changes (`<details>`)** | Evaluate each of the 3 items independently — do not check/uncheck as a block: (1) check migration item only if `database/migration/` changed; (2) check mocks item only if any `port/`/`domain/service/` interface changed AND `mocks/` was regenerated in the diff; (3) check breaking-changes item only if breaking changes are explicitly written out in Context below — if there are none, leave it unchecked (not N/A-checked) |
 | **Context** | Leave HTML comment placeholder unless user provides context (related issues, incidents, design notes) |
 
@@ -139,13 +139,13 @@ Read and fill `.github/PULL_REQUEST_TEMPLATE.md` verbatim. **CRITICAL: Preserve 
 ## Test Plan
 
 - Unit tests cover validation rules
-- Run `make test` to verify
+- Run `make unit-tests` to verify
 
 ## Checklist
 
 - [x] Self-reviewed the diff
 - [x] Tests cover new/changed behavior
-- [x] `make test` passes locally
+- [x] `make unit-tests` passes locally
 - [x] No secrets or credentials committed
 
 <details>

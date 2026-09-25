@@ -17,13 +17,13 @@
 
 <!-- How did you verify this? -->
 
-- Run `make test` to verify
+- Run `make unit-tests` to verify
 
 ## Checklist
 
 - [ ] Self-reviewed the diff
 - [ ] Tests cover new/changed behavior
-- [ ] `make test` passes locally
+- [ ] `make unit-tests` passes locally
 - [ ] No secrets or credentials committed
 
 <details>
