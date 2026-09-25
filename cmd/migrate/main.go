@@ -9,10 +9,10 @@ import (
 	"os"
 
 	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
+	pgxv5 "github.com/golang-migrate/migrate/v4/database/pgx/v5"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
-	_ "github.com/lib/pq"
 
 	"github.com/jorgeAM/go-template/internal/bootstrap"
 	"github.com/jorgeAM/go-template/internal/platform/log"
@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 
-	db, err := sql.Open("postgres", buildDSN())
+	db, err := sql.Open("pgx", buildDSN())
 	if err != nil {
 		log.Error(ctx, "migrate: failed to open database", log.WithError(err))
 		os.Exit(1)
@@ -63,12 +63,12 @@ func up(ctx context.Context, db *sql.DB, name string, migrations fs.FS) error {
 		return fmt.Errorf("load migration files: %w", err)
 	}
 
-	driver, err := postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable(name)})
+	driver, err := pgxv5.WithInstance(db, &pgxv5.Config{MigrationsTable: migrationsTable(name)})
 	if err != nil {
 		return fmt.Errorf("build migration driver: %w", err)
 	}
 
-	runner, err := migrate.NewWithInstance("iofs", source, "postgres", driver)
+	runner, err := migrate.NewWithInstance("iofs", source, "pgx5", driver)
 	if err != nil {
 		return fmt.Errorf("build migration runner: %w", err)
 	}

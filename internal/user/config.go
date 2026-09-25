@@ -8,7 +8,6 @@ type Config struct {
 	PostgresDatabase           string
 	PostgresUser               string
 	PostgresPassword           string
-	PostgresMaxIdleConnections int
 	PostgresMaxOpenConnections int
 }
 
@@ -19,7 +18,6 @@ func LoadConfig() *Config {
 		PostgresDatabase:           env.GetEnv("POSTGRES_DB", "db"),
 		PostgresUser:               env.GetEnv("POSTGRES_USER", "admin"),
 		PostgresPassword:           env.GetEnv("POSTGRES_PASSWORD", "passwd123"),
-		PostgresMaxIdleConnections: env.GetEnv("POSTGRES_MAX_IDLE_CONNECTIONS", 10),
 		PostgresMaxOpenConnections: env.GetEnv("POSTGRES_MAX_OPEN_CONNECTIONS", 30),
 	}
 }
