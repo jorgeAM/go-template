@@ -16,14 +16,19 @@ A type belongs in `internal/shared/` only if it answers YES to:
 - No repository interfaces, no use cases — those are module-owned.
 - No dependencies on any `internal/<module>/*` package (this must stay a leaf
   dependency; if it needs to import a module, it's not shared, it's misplaced).
-- No dependencies on `internal/platform/*` either — shared must have zero
-  dependencies of its own, full stop. If a type needs I/O, it's not shared.
+- No dependencies on `internal/platform/*` either. If a type needs I/O, it's not shared.
+- Standard library only, plus this third-party allowlist:
+  - `github.com/go-chi/chi/v5` — the router in the `module.Module` contract
+  - `github.com/google/uuid` — `valueobject.ID` generation
+  - `github.com/golang-jwt/jwt/v5`, `golang.org/x/crypto/bcrypt` — `crypto` primitives
+
+  Adding a library to this list requires explicit team agreement, same as a new package.
 
 ## Consumption Rule
 `internal/shared/*` may be imported from any layer of any module —
 `internal/<module>/domain`, `internal/<module>/app`, `internal/<module>/api`, or
-`internal/<module>/adapters` — since it has zero dependencies of its
-own and carries no business or I/O concerns. This is the one exception to
+`internal/<module>/adapters` — since it imports nothing internal beyond
+itself and carries no business or I/O concerns. This is the one exception to
 "domain imports nothing technical": shared types aren't technical, they're
 just common vocabulary every module speaks.
 
