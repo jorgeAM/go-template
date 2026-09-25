@@ -192,7 +192,7 @@ Example: `GET /api/v1/users?order_by=created_at&order_type=DESC&page=1&page_size
 ## Available Make Commands
 
 - `make generate` - Run go generate for mock generation
-- `make test` - Run tests with coverage reporting
+- `make unit-tests` - Run tests with coverage reporting
 - `make show-cover` - Display test coverage in browser
 - `make tidy` - Tidy and vendor dependencies
 - `make run` - Start the application server

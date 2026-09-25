@@ -4,7 +4,7 @@ include .env
 generate:
 	go generate ./...
 
-test:
+unit-tests:
 	go test ./... -cover -v -coverprofile=./coverage.out
 
 show-cover:
