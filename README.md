@@ -47,7 +47,7 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 - **Database**: Transaction management interface and connection handling
 - **Error Handling**: Custom error types with error codes, cause tracking, and metadata support
 - **Crypto**: JWT utilities and secure password hashing
-- **Value objects**: Email with regex validation, UUID ID, timestamps
+- **Value objects**: Email with regex validation, time-ordered UUIDv7, timestamps
 - **Environment**: Type-safe environment variable loading for int, string, bool types
 - **PIN**: Cryptographically secure 4-digit PIN generation
 - **Reference**: Generic pointer utility functions

@@ -3,7 +3,7 @@ package domain
 import "github.com/jorgeAM/go-template/internal/shared/valueobject"
 
 func UnmarshallUser(
-	id valueobject.ID,
+	id valueobject.UUID,
 	name string,
 	email valueobject.Email,
 	hashedPassword string,

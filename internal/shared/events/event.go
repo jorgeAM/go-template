@@ -35,8 +35,13 @@ func NewEvent(
 		return nil, ErrInvalidPayload
 	}
 
+	id, err := valueobject.NewUUIDv7()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Event{
-		ID:        valueobject.GenerateUUID().String(),
+		ID:        id.String(),
 		Topic:     eventTopic,
 		Payload:   payload,
 		Timestamp: time.Now(),

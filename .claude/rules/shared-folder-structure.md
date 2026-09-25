@@ -19,7 +19,7 @@ A type belongs in `internal/shared/` only if it answers YES to:
 - No dependencies on `internal/platform/*` either. If a type needs I/O, it's not shared.
 - Standard library only, plus this third-party allowlist:
   - `github.com/go-chi/chi/v5` — the router in the `module.Module` contract
-  - `github.com/google/uuid` — `valueobject.ID` generation
+  - `github.com/google/uuid` — `valueobject.UUID` (v7 generation, parsing)
   - `github.com/golang-jwt/jwt/v5`, `golang.org/x/crypto/bcrypt` — `crypto` primitives
 
   Adding a library to this list requires explicit team agreement, same as a new package.
@@ -36,7 +36,7 @@ just common vocabulary every module speaks.
 - `internal/shared/errors/` — `Error`, `ErrorCode`, `Define`, `Wrap`, `WithMetadata`
 - `internal/shared/criteria/` — filters, ordering and pagination
 - `internal/shared/valueobject/email.go` — Email value object
-- `internal/shared/valueobject/id.go` — ID value object
+- `internal/shared/valueobject/uuid.go` — UUID value object
 
 One package per concept (`errors`, `criteria`, `valueobject`), not one
 package per type — a new value object is a new file inside `valueobject/`,
