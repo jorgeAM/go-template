@@ -2,21 +2,23 @@ package middleware
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/jorgeAM/go-template/internal/shared/crypto"
-	"github.com/jorgeAM/go-template/internal/shared/env"
 )
 
 type contextKey string
 
-const USER_CONTEXT_KEY contextKey = "user"
+const principalContextKey contextKey = "principal"
 
-type UserInfo struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
+// Principal is the authenticated caller as carried by the access token. Subject is the JWT "sub"
+// claim; modules map it (and any extra Claims) onto their own concepts.
+type Principal struct {
+	Subject string
+	Claims  map[string]any
 }
 
 func Authenticate(next http.Handler) http.Handler {
@@ -41,19 +43,18 @@ func Authenticate(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, idOk := claims["sub"].(string)
-		email, emailOk := claims["email"].(string)
-		if !idOk || !emailOk {
+		subject, ok := claims["sub"].(string)
+		if !ok || subject == "" {
 			errorHandler(w, "invalid token payload")
 			return
 		}
 
-		userInfo := &UserInfo{
-			ID:    userID,
-			Email: email,
+		principal := &Principal{
+			Subject: subject,
+			Claims:  claims,
 		}
 
-		ctx := context.WithValue(r.Context(), USER_CONTEXT_KEY, userInfo)
+		ctx := context.WithValue(r.Context(), principalContextKey, principal)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
@@ -61,37 +62,37 @@ func Authenticate(next http.Handler) http.Handler {
 
 const refreshTokenMaxAgeSeconds = 30 * 24 * 3600
 
-func SetAuthCookie(w http.ResponseWriter, token string) {
+func SetAuthCookie(w http.ResponseWriter, token string, secure bool) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
 		Value:    token,
 		HttpOnly: true,
-		Secure:   env.GetEnv("APP_ENV", "local") == "production",
+		Secure:   secure,
 		SameSite: http.SameSiteLaxMode,
 		Path:     "/",
 		MaxAge:   refreshTokenMaxAgeSeconds,
 	})
 }
 
-func ClearAuthCookie(w http.ResponseWriter) {
+func ClearAuthCookie(w http.ResponseWriter, secure bool) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
 		Value:    "",
 		HttpOnly: true,
-		Secure:   env.GetEnv("APP_ENV", "local") == "production",
+		Secure:   secure,
 		SameSite: http.SameSiteLaxMode,
 		Path:     "/",
 		MaxAge:   -1,
 	})
 }
 
-func GetUserFromContext(ctx context.Context) (*UserInfo, bool) {
-	user, ok := ctx.Value(USER_CONTEXT_KEY).(*UserInfo)
-	return user, ok
+func GetPrincipalFromContext(ctx context.Context) (*Principal, bool) {
+	principal, ok := ctx.Value(principalContextKey).(*Principal)
+	return principal, ok
 }
 
 func errorHandler(w http.ResponseWriter, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnauthorized)
-	w.Write([]byte(fmt.Sprintf(`{"message":"%s"}`, message)))
+	_ = json.NewEncoder(w).Encode(map[string]string{"message": message})
 }

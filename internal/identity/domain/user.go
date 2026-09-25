@@ -17,7 +17,7 @@ var (
 )
 
 type User struct {
-	id             valueobject.ID
+	id             valueobject.UUID
 	name           string
 	email          valueobject.Email
 	hashedPassword string
@@ -48,8 +48,13 @@ func NewUser(name, email, password string) (*User, error) {
 		return nil, errors.Wrap(ErrUserInternal, err, "failed to hash password")
 	}
 
+	id, err := valueobject.NewUUIDv7()
+	if err != nil {
+		return nil, errors.Wrap(ErrUserInternal, err, "failed to generate user id")
+	}
+
 	return &User{
-		id:             valueobject.GenerateUUID(),
+		id:             id,
 		name:           name,
 		email:          emailVO,
 		hashedPassword: hashed,
@@ -57,7 +62,7 @@ func NewUser(name, email, password string) (*User, error) {
 	}, nil
 }
 
-func (u *User) ID() valueobject.ID {
+func (u *User) ID() valueobject.UUID {
 	return u.id
 }
 

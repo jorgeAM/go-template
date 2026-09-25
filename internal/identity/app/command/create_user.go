@@ -27,7 +27,11 @@ func NewCreateUser(userRepository domain.UserRepository) *CreateUser {
 func (c *CreateUser) Handle(ctx context.Context, cmd *CreateUserCommand) (*models.UserInfo, error) {
 	user, err := domain.NewUser(cmd.Name, cmd.Email, cmd.Password)
 	if err != nil {
-		return nil, err
+		if errors.Is(err, domain.ErrInvalidUser) {
+			return nil, errors.Wrap(domain.ErrInvalidUser, err, "invalid user data")
+		}
+
+		return nil, errors.Wrap(domain.ErrUserInternal, err, "we got a problem creating the user")
 	}
 
 	if err := c.userRepository.Save(ctx, user); err != nil {

@@ -24,7 +24,7 @@ func NewGetUser(userRepository domain.UserRepository) *GetUser {
 }
 
 func (g *GetUser) Handle(ctx context.Context, q *GetUserQuery) (*models.UserInfo, error) {
-	userID, err := valueobject.NewID(q.UserID)
+	userID, err := valueobject.ParseUUID(q.UserID)
 	if err != nil {
 		return nil, errors.Wrap(domain.ErrInvalidUser, err, "invalid user id", errors.WithMetadata("id", q.UserID))
 	}

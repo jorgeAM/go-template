@@ -55,7 +55,7 @@ func (r *PostgresUserRepository) Save(ctx context.Context, user *domain.User) er
 	return nil
 }
 
-func (r *PostgresUserRepository) FindByID(ctx context.Context, id valueobject.ID) (*domain.User, error) {
+func (r *PostgresUserRepository) FindByID(ctx context.Context, id valueobject.UUID) (*domain.User, error) {
 	row, err := r.queries(ctx).FindUserByID(ctx, id.String())
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -70,8 +70,13 @@ func (r *PostgresUserRepository) FindByID(ctx context.Context, id valueobject.ID
 		)
 	}
 
+	userID, err := valueobject.ParseUUID(row.ID)
+	if err != nil {
+		return nil, errors.Wrap(domain.ErrUserInternal, err, "stored user id is not a valid uuid")
+	}
+
 	return domain.UnmarshallUser(
-		valueobject.ID(row.ID),
+		userID,
 		row.Name,
 		valueobject.Email(row.Email),
 		row.Password,

@@ -43,7 +43,7 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // FindByID mocks base method.
-func (m *MockUserRepository) FindByID(ctx context.Context, id valueobject.ID) (*domain.User, error) {
+func (m *MockUserRepository) FindByID(ctx context.Context, id valueobject.UUID) (*domain.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", ctx, id)
 	ret0, _ := ret[0].(*domain.User)

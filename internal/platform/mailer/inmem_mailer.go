@@ -20,7 +20,6 @@ func (s *InMemoryMailer) Send(ctx context.Context, payload *MailerPayload) error
 		ctx,
 		"sending email using mock version",
 		log.WithString("from", payload.From),
-		log.WithString("to", payload.To),
 		log.WithString("subject", payload.Subject),
 	)
 
