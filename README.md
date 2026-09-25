@@ -22,9 +22,9 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 ### Security & Authentication
 
 - **Password Hashing**: Secure bcrypt password hashing and comparison
-- **JWT Authentication**: Complete JWT system with token generation, validation, and type checking
-- **Authentication Middleware**: Bearer token validation with automatic user context injection (available in `middleware.Authenticate`, not mounted by default)
-- **Cookie Management**: Secure refresh token handling with HttpOnly and SameSite protection
+- **JWT Authentication**: Token generation, validation, and type checking; failures map to client-safe sentinel errors (`crypto.ErrTokenExpired`, `ErrTokenMalformed`, `ErrTokenType`, `ErrTokenIssuer`)
+- **Authentication Middleware**: Bearer token validation with principal (JWT `sub` + claims) context injection (available in `middleware.Authenticate`, not mounted by default)
+- **Cookie Management**: Refresh token cookie with HttpOnly and SameSite protection; the caller passes the `secure` flag from its own config
 - **CORS Support**: Configurable cross-origin resource sharing with flexible origin/method control
 - **Request Security**: Request ID tracking, real IP detection, configurable timeout protection
 
@@ -82,7 +82,7 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
 - **Response Headers**: Automatic Content-Type and Accept header injection
 - **Timeout Management**: Per-request timeout with X-Timeout header support (default 15s)
 
-`middleware.Authenticate` (JWT Bearer validation with user context injection) is available but not mounted in `cmd/app/router.go`; add it to the routes that need it.
+`middleware.Authenticate` (JWT Bearer validation with principal context injection) is available but not mounted in `cmd/app/router.go`; add it to the routes that need it.
 
 ### Development Tools
 

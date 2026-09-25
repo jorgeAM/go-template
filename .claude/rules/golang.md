@@ -130,12 +130,17 @@ func (s *Server) Login(ctx context.Context, request LoginRequestObject) (LoginRe
 
 The error itself is never returned as the function's second value for a handled domain error — the sentinel maps to a typed response object instead, and `nil` is returned as the error. Only return a non-nil `error` for something oapi-codegen's own runtime should treat as unhandled.
 
-#### Authenticated User Context
+#### Authenticated Principal Context
+
+`middleware.Authenticate` validates a Bearer access token (signature, expiry, `type`, `iss`) and
+puts a `Principal{Subject, Claims}` in context — it has no notion of a user. The module maps
+`principal.Subject` (the `sub` claim) onto its own identifier. Rejected requests get a JSON 401
+whose message carries only `crypto`'s sentinel errors, never the raw jwt library error.
 
 ```go
-user, ok := middleware.GetUserFromContext(ctx)
+principal, ok := middleware.GetPrincipalFromContext(ctx)
 if !ok {
-    return OpNNN500JSONResponse{InternalErrorJSONResponse{Code: errors.InternalCode.String(), Message: "user not found in context"}}, nil
+    return OpNNN500JSONResponse{InternalErrorJSONResponse{Code: errors.InternalCode.String(), Message: "principal not found in context"}}, nil
 }
 ```
 
