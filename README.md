@@ -129,6 +129,12 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
     ```
 
 4.  **Set up the database:**
+    Start PostgreSQL (reads credentials from `.env`):
+
+    ```sh
+    make docker-up
+    ```
+
     Run database migrations:
 
     ```sh
@@ -199,6 +205,8 @@ Example for a list endpoint: `?order_by=created_at&order_type=DESC&page=1&page_s
 - `make show-cover` - Display test coverage in browser
 - `make tidy` - Tidy and vendor dependencies
 - `make run` - Start the application server
+- `make docker-up` - Start local containers (PostgreSQL) and wait until healthy
+- `make docker-down` - Stop and remove local containers (data volume is kept)
 - `make migrate` - Apply every module's pending migrations (`cmd/migrate`)
 - `make new_migration MODULE=<module> MIGRATION_NAME=<name>` - Create new migration files for a module
 - `make migration_down MODULE=<module>` - Rollback the last migration of a module

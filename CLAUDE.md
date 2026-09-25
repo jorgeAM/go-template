@@ -57,6 +57,7 @@ See `.claude/rules/folder-structure.md` and `.claude/rules/domain-layer.md`.
 | `make run` | Start the server (`cmd/app`), logs piped through `jq` |
 | `make generate` | `go generate ./...`: sqlc, oapi-codegen, mockgen (all via `go tool`) |
 | `make unit-tests` | `go test ./...` with coverage |
+| `make docker-up` / `make docker-down` | Start / remove local containers from `compose.yaml` (PostgreSQL) |
 | `make migrate` | Apply every module's pending migrations (`cmd/migrate`) |
 | `make new_migration MODULE=<m> MIGRATION_NAME=<n>` | New migration pair for a module (golang-migrate CLI) |
 | `make migration_down MODULE=<m>` | Roll back a module's last migration |
