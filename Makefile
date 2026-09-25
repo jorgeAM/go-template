@@ -8,7 +8,7 @@ unit-tests:
 	go test ./... -cover -v -coverprofile=./coverage.out
 
 integration-tests:
-	@echo "integration-tests: to be implemented soon"
+	go test ./... -tags=integration -run Integration -v
 
 show-cover:
 	go tool cover -html=./coverage.out
