@@ -10,7 +10,7 @@ type MailerPayload struct {
 	Body    string   `json:"body"`
 }
 
-//go:generate mockgen -source=./mailer.go -destination=./mocks/mailer.go -package=mock -mock_names=Mailer=MockMailer
+//go:generate go tool mockgen -source=./mailer.go -destination=./mocks/mailer.go -package=mock -mock_names=Mailer=MockMailer
 type Mailer interface {
 	Send(ctx context.Context, payload *MailerPayload) error
 }
