@@ -20,6 +20,13 @@ tidy:
 run:
 	go run ./cmd/app | jq '.'
 
+# Docker
+docker-up:
+	docker compose up -d --wait
+
+docker-down:
+	docker compose down
+
 # Migrations
 # `make migrate` applies every module's pending up migrations (cmd/migrate walks
 # the same module list cmd/app boots from; each module keeps its own
