@@ -1,7 +1,0 @@
-BEGIN;
-
-ALTER TABLE my_schema.users
-    DROP COLUMN IF EXISTS name,
-    DROP COLUMN IF EXISTS password;
-
-COMMIT;

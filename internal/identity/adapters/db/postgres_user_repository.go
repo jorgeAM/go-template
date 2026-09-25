@@ -6,11 +6,11 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/jorgeAM/go-template/internal/identity/adapters/db/sqlc"
+	"github.com/jorgeAM/go-template/internal/identity/domain"
 	platformdb "github.com/jorgeAM/go-template/internal/platform/db"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
 	"github.com/jorgeAM/go-template/internal/shared/model"
-	"github.com/jorgeAM/go-template/internal/user/adapters/db/sqlc"
-	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
 var _ domain.UserRepository = (*PostgresUserRepository)(nil)

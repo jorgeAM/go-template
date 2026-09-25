@@ -3,10 +3,10 @@ package query
 import (
 	"context"
 
+	"github.com/jorgeAM/go-template/internal/identity/app/models"
+	"github.com/jorgeAM/go-template/internal/identity/domain"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
 	"github.com/jorgeAM/go-template/internal/shared/model"
-	"github.com/jorgeAM/go-template/internal/user/app/models"
-	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
 type GetUserQuery struct {

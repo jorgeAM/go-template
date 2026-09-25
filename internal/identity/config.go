@@ -1,4 +1,4 @@
-package user
+package identity
 
 import "github.com/jorgeAM/go-template/internal/shared/env"
 

@@ -1,5 +1,0 @@
-BEGIN;
-
-DROP TABLE IF EXISTS my_schema.users;
-
-COMMIT;

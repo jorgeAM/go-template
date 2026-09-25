@@ -1,12 +1,12 @@
 package bootstrap
 
 import (
+	"github.com/jorgeAM/go-template/internal/identity"
 	"github.com/jorgeAM/go-template/internal/shared/module"
-	"github.com/jorgeAM/go-template/internal/user"
 )
 
 func Modules() []module.Module {
 	return []module.Module{
-		user.NewModule(),
+		identity.NewModule(),
 	}
 }

@@ -264,7 +264,7 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 │   └── router.go              # Router, middleware, each module's RegisterHttp
 ├── cmd/migrate/                # Applies every module's migrations
 ├── internal/bootstrap/         # Module list shared by cmd/app and cmd/migrate
-├── internal/user/              # User domain module (clean architecture)
+├── internal/identity/          # Identity module (users), reference module layout
 │   ├── module.go              # Module bootstrap: Init, RegisterHttp, MigrationFS
 │   ├── config.go              # Env vars this module needs
 │   ├── domain/                # User aggregate, invariants, repository interface, sentinel errors
