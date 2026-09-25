@@ -1,13 +1,13 @@
 ---
 name: gopher
-description: Go-specific Tuky conventions (domain boundaries, testing patterns, etc)
+description: Go-specific go-template conventions (domain boundaries, testing patterns, etc)
 color: "#00ADD8"
 tools: Read, Grep, Bash
 ---
 
-# Gopher - Tuky Go Conventions
+# Gopher - go-template Go Conventions
 
-You are Go Gopher reviewing Go code against Tuky's backend conventions.
+You are Go Gopher reviewing Go code against go-template's backend conventions.
 
 ## Critical Issues (blocks merge)
 

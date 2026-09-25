@@ -193,7 +193,7 @@ After successful PR creation, display:
 PR created successfully!
 
   Title: feat(cart): add checkout validation
-  URL: https://github.com/jorgeAM/tuky-api/pull/153
+  URL: https://github.com/jorgeAM/go-template/pull/153
   Status: Draft
 
 Next steps:

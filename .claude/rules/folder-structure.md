@@ -124,7 +124,7 @@ moves down to `app/` instead of `domain/`. When that happens:
   `app/models/<name>_repository.go`.
 - `adapters/db/postgres_<name>_repository.go` is unaffected beyond its import path.
 
-Example: `internal/settlement/app/models/order.go` + `order_repository.go` — a log record of
+Hypothetical example: a `settlement` module's `app/models/order.go` + `order_repository.go` — a log record of
 a paid order attached to a billing cycle, no invariant enforcement of its own beyond referencing
 an existing cycle and order. Don't apply this preemptively; it only kicks in once an entity is
 confirmed anemic per domain-layer.md rule 8.

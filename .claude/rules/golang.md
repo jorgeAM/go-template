@@ -84,7 +84,7 @@ return fmt.Errorf("cart not found")  // Don't do this
 return stderrors.New("invalid")      // Don't do this
 ```
 
-Constructors: `internal/shared/errors/error.go`. Sentinel codes live per-module in `domain/` (e.g. `internal/booking/domain/booking.go`).
+Constructors: `internal/shared/errors/error.go`. Sentinel codes live per-module in `domain/` (e.g. `internal/identity/domain/user.go`).
 
 ### Application Layer
 
@@ -161,7 +161,7 @@ return Login401JSONResponse{unauthorized(err)}, nil // 401
 return Login500JSONResponse{internalError(err)}, nil // 500
 ```
 
-Need to set something outside the JSON body (a cookie, a header)? Wrap the generated response type and override its `VisitOpResponse` method (see `signUp200WithCookie`/`login200WithCookie` in `internal/identity/api/http/server.go`) — don't reach for a response-writing helper.
+Need to set something outside the JSON body (a cookie, a header)? Wrap the generated response type and override its `VisitOpResponse` method — don't reach for a response-writing helper.
 
 There is no `DomainError` type, no `IsNotFoundError`/`IsValidationError`-style helpers, and no field-level validation error constructor. Check specific sentinel errors with `errors.Is(err, domain.ErrX)` against the `*ErrorCode` values each module defines via `errors.Define(...)`.
 
@@ -176,6 +176,6 @@ Use `.claude/rules/logging.md` as the source of truth for all logging behavior.
 - Syntax that "doesn't exist" in the standard library
 - API usage patterns - the compiler already validated these
 
-**Go version:** This project uses Go 1.25+. Features like `sync.WaitGroup.Go()` are valid.
+**Go version:** This project uses Go 1.26+. Features like `sync.WaitGroup.Go()` are valid.
 
 **Deliberate placeholders:** Mock/stub implementations (especially for payment, external APIs) are intentional until real implementations are needed. Do not flag these as issues unless they're in production code paths.

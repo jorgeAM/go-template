@@ -34,9 +34,7 @@ reason rather than carving out a permanent exception for it.
 
 3. **Mutation methods that can violate an invariant must return `error`, not
    silently no-op.** If a mutation can't apply, the caller must be told —
-   don't swallow the failure. (Anti-pattern example already in the codebase:
-   `user.AssignDateOfBirth` silently skips if already set instead of
-   returning an error — don't repeat this in new domain code.)
+   don't swallow the failure.
 
 4. **Repository interface lives in its own file, next to the aggregate it
    serves** — `domain/[name]_repository.go`, not inlined into the entity
@@ -60,8 +58,8 @@ reason rather than carving out a permanent exception for it.
    `domain/unmarshall.go`, not in the entity file.** Private fields mean the
    aggregate's own `New*` constructor re-runs creation invariants — wrong for
    rebuilding from a DB row, which must skip them. Give that path a separate
-   `Unmarshall<Entity>(...)` function (see `identity.UnmarshallAccount` in
-   `domain/unmarshall.go`) that only the module's own `adapters/db` package
+   `Unmarshall<Entity>(...)` function (see `domain.UnmarshallUser` in
+   `internal/identity/domain/unmarshall.go`) that only the module's own `adapters/db` package
    calls. One `unmarshall.go` per module, one function per aggregate inside
    it — not a new file per aggregate.
 
