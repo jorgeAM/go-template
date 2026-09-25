@@ -21,13 +21,24 @@ run:
 	go run ./cmd/app | jq '.'
 
 # Migrations
-postgres_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
+# `make migrate` applies every module's pending up migrations (cmd/migrate walks
+# the same module list cmd/app boots from; each module keeps its own
+# schema_migrations_<name> table). new_migration and migration_down need
+# MODULE=<name> and the golang-migrate CLI.
+MIGRATIONS_DIR = internal/$(MODULE)/infrastructure/persistence/migrations
+MIGRATIONS_TABLE = schema_migrations_$(MODULE)
+postgres_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&x-migrations-table=${MIGRATIONS_TABLE}"
 
-new_migration:
-	migrate create -ext sql -dir database/migration/ -seq $(MIGRATION_NAME)
+migrate:
+	go run ./cmd/migrate
 
-migration_up:
-	migrate -path database/migration/ -database $(postgres_url) -verbose up
+new_migration: check-module
+	migrate create -ext sql -dir $(MIGRATIONS_DIR) -seq $(MIGRATION_NAME)
 
-migration_down:
-	migrate -path database/migration/ -database $(postgres_url) -verbose down
+migration_down: check-module
+	migrate -path $(MIGRATIONS_DIR) -database $(postgres_url) -verbose down
+
+check-module:
+ifndef MODULE
+	$(error MODULE is required, e.g. make new_migration MODULE=user MIGRATION_NAME=add_name)
+endif
