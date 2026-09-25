@@ -25,7 +25,7 @@ run:
 # the same module list cmd/app boots from; each module keeps its own
 # schema_migrations_<name> table). new_migration and migration_down need
 # MODULE=<name> and the golang-migrate CLI.
-MIGRATIONS_DIR = internal/$(MODULE)/infrastructure/persistence/migrations
+MIGRATIONS_DIR = internal/$(MODULE)/adapters/db/migrations
 MIGRATIONS_TABLE = schema_migrations_$(MODULE)
 postgres_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable&x-migrations-table=${MIGRATIONS_TABLE}"
 
