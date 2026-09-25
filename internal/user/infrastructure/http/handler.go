@@ -5,14 +5,21 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	config "github.com/jorgeAM/go-template/cfg"
 	"github.com/jorgeAM/go-template/internal/platform/http/response"
 	"github.com/jorgeAM/go-template/internal/user/application/command"
 	"github.com/jorgeAM/go-template/internal/user/application/query"
+	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
-func CreateUser(_ *config.Config, deps *config.Dependencies) http.HandlerFunc {
-	srv := command.NewCreateUser(deps.UserRepository)
+func Register(r chi.Router, userRepository domain.UserRepository) {
+	r.Route("/api/v1/user", func(r chi.Router) {
+		r.Post("/", CreateUser(userRepository))
+		r.Get("/{id}", GetUser(userRepository))
+	})
+}
+
+func CreateUser(userRepository domain.UserRepository) http.HandlerFunc {
+	srv := command.NewCreateUser(userRepository)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var body command.CreateUserCommand
@@ -29,8 +36,9 @@ func CreateUser(_ *config.Config, deps *config.Dependencies) http.HandlerFunc {
 		response.OK(w, "ok")
 	}
 }
-func GetUser(_ *config.Config, deps *config.Dependencies) http.HandlerFunc {
-	srv := query.NewGetUser(deps.UserRepository)
+
+func GetUser(userRepository domain.UserRepository) http.HandlerFunc {
+	srv := query.NewGetUser(userRepository)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID := chi.URLParam(r, "id")

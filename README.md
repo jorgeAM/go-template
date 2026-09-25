@@ -129,7 +129,7 @@ A comprehensive boilerplate template for building production-ready Golang APIs w
     Run database migrations:
 
     ```sh
-    make migration_up
+    make migrate
     ```
 
 5.  **Run the application:**
@@ -196,9 +196,9 @@ Example: `GET /api/v1/users?order_by=created_at&order_type=DESC&page=1&page_size
 - `make show-cover` - Display test coverage in browser
 - `make tidy` - Tidy and vendor dependencies
 - `make run` - Start the application server
-- `make new_migration MIGRATION_NAME=<name>` - Create new database migration files
-- `make migration_up` - Run all pending database migrations
-- `make migration_down` - Rollback the last database migration
+- `make migrate` - Apply every module's pending migrations (`cmd/migrate`)
+- `make new_migration MODULE=<module> MIGRATION_NAME=<name>` - Create new migration files for a module
+- `make migration_down MODULE=<module>` - Rollback the last migration of a module
 
 ## Usage Examples
 
@@ -265,16 +265,20 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 
 ```
 ├── cmd/app/                    # Application entry point
-│   ├── main.go                # Main application file with graceful shutdown
-│   └── router.go              # HTTP router configuration and middleware setup
+│   ├── main.go                # Initializes every module, graceful shutdown
+│   └── router.go              # Router, middleware, each module's RegisterHttp
+├── cmd/migrate/                # Applies every module's migrations
+├── internal/bootstrap/         # Module list shared by cmd/app and cmd/migrate
 ├── internal/user/              # User domain module (clean architecture)
+│   ├── module.go              # Module bootstrap: Init, RegisterHttp, MigrationFS
+│   ├── config.go              # Env vars this module needs
 │   ├── application/            # Use cases (commands and queries)
 │   │   ├── command/           # Write operations (CreateUser)
 │   │   └── query/             # Read operations (GetUser)
 │   ├── domain/                # Business logic and entities
 │   ├── infrastructure/        # External concerns (HTTP handlers, persistence)
 │   │   ├── http/              # HTTP handlers
-│   │   └── persistence/       # Database repositories
+│   │   └── persistence/       # Database repositories + embedded migrations/
 │   └── mock/                  # Generated mocks for testing
 ├── internal/platform/          # I/O adapters shared across modules
 │   ├── db/                    # Transaction management
@@ -297,10 +301,6 @@ url, err := signer.GeneratePresignedURL(ctx, "file.jpg", storage.JPEG)
 │   ├── generator/             # Cryptographically secure PIN generation
 │   ├── model/                 # Value objects (Country, Currency, Email, etc.)
 │   └── ref/                   # Pointer utility functions
-├── database/migration/         # Database migrations (up/down SQL files)
-├── cfg/                       # Configuration management and dependency injection
-│   ├── config.go              # Environment-based configuration loading
-│   └── dependencies.go        # Dependency injection and service wiring
 ├── vendor/                    # Vendored dependencies
 ├── Dockerfile                 # Multi-stage Docker build with distroless base
 ├── Makefile                   # Development and deployment commands

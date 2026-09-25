@@ -1,18 +1,18 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	httpin_integration "github.com/ggicci/httpin/integration"
 	"github.com/go-chi/chi/v5"
-	config "github.com/jorgeAM/go-template/cfg"
 	"github.com/jorgeAM/go-template/internal/platform/http/handler"
 	"github.com/jorgeAM/go-template/internal/platform/http/middleware"
-	userHandler "github.com/jorgeAM/go-template/internal/user/infrastructure/http"
+	"github.com/jorgeAM/go-template/internal/shared/module"
 )
 
-func buildRouter(cfg *config.Config, deps *config.Dependencies) http.Handler {
+func buildRouter(ctx context.Context, modules []module.Module) (http.Handler, error) {
 	router := chi.NewRouter()
 
 	httpin_integration.UseGochiURLParam("path", chi.URLParam)
@@ -30,12 +30,11 @@ func buildRouter(cfg *config.Config, deps *config.Dependencies) http.Handler {
 
 	router.Get("/health", handler.HealthCheck)
 
-	router.Route("/api/v1", func(r chi.Router) {
-		r.Route("/user", func(r chi.Router) {
-			r.Post("/", userHandler.CreateUser(cfg, deps))
-			r.Get("/{id}", userHandler.GetUser(cfg, deps))
-		})
-	})
+	for _, m := range modules {
+		if err := m.RegisterHttp(ctx, router); err != nil {
+			return nil, err
+		}
+	}
 
-	return router
+	return router, nil
 }

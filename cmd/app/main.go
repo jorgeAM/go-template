@@ -8,17 +8,21 @@ import (
 	"os/signal"
 	"syscall"
 
-	config "github.com/jorgeAM/go-template/cfg"
+	"github.com/jorgeAM/go-template/internal/bootstrap"
 	"github.com/jorgeAM/go-template/internal/platform/log"
+	"github.com/jorgeAM/go-template/internal/shared/env"
+	"github.com/jorgeAM/go-template/internal/shared/module"
 
 	_ "github.com/joho/godotenv/autoload"
 )
 
-func startServer(cfg *config.Config, deps *config.Dependencies) error {
-	router := buildRouter(cfg, deps)
+func startServer(ctx context.Context, port string, modules []module.Module) error {
+	router, err := buildRouter(ctx, modules)
+	if err != nil {
+		return err
+	}
 
-	return http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), router)
-
+	return http.ListenAndServe(fmt.Sprintf(":%s", port), router)
 }
 
 func main() {
@@ -29,28 +33,24 @@ func main() {
 		log.Panic(ctx, "error initializing default logger", log.WithError(err))
 	}
 
-	log.Info(ctx, "[Config] Loading...")
+	port := env.GetEnv("PORT", "8080")
 
-	cfg, err := config.LoadConfig()
-	if err != nil {
-		log.Panic(ctx, "error loading config", log.WithError(err))
+	log.Info(ctx, "[Modules] Initializing")
+
+	modules := bootstrap.Modules()
+	for _, m := range modules {
+		if err := m.Init(ctx); err != nil {
+			log.Panic(ctx, "error initializing module", log.WithString("module", string(m.Name())), log.WithError(err))
+		}
 	}
 
-	log.Info(ctx, "[Config] Finished")
-	log.Info(ctx, "[Dependencies] Building...")
-
-	deps, err := config.BuildDependencies(cfg)
-	if err != nil {
-		log.Panic(ctx, "error building dependencies", log.WithError(err))
-	}
-
-	log.Info(ctx, "[Dependencies] Finished")
+	log.Info(ctx, "[Modules] Finished")
 
 	log.Info(ctx, "[App] Initializing")
 	go func() {
-		log.Info(ctx, fmt.Sprintf("[Server] Listening on %s", cfg.Port))
+		log.Info(ctx, "[Server] Listening", log.WithString("port", port))
 
-		if err := startServer(cfg, deps); err != nil {
+		if err := startServer(ctx, port, modules); err != nil {
 			log.Panic(ctx, "error starting server", log.WithError(err))
 		}
 	}()
