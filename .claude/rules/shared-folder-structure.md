@@ -21,17 +21,17 @@ A type belongs in `internal/shared/` only if it answers YES to:
 
 ## Consumption Rule
 `internal/shared/*` may be imported from any layer of any module —
-`internal/<module>/domain`, `internal/<module>/application`, or
-`internal/<module>/infrastructure` — since it has zero dependencies of its
+`internal/<module>/domain`, `internal/<module>/app`, `internal/<module>/api`, or
+`internal/<module>/adapters` — since it has zero dependencies of its
 own and carries no business or I/O concerns. This is the one exception to
 "domain imports nothing technical": shared types aren't technical, they're
 just common vocabulary every module speaks.
 
 ## Example package
-- `internal/shared/error/errors.go` — AppError, ErrorKind enum, WithMeta
-- `internal/shared/pagination/pagination.go` — Page, PageRequest
-- `internal/shared/valueobject/money.go` — Money value object
-- `internal/shared/valueobject/email.go` — Email value object
+- `internal/shared/errors/` — `Error`, `ErrorCode`, `Define`, `Wrap`, `WithMetadata`
+- `internal/shared/criteria/` — filters, ordering and pagination
+- `internal/shared/model/email.go` — Email value object
+- `internal/shared/model/id.go` — ID value object
 
 One package per concept (`error`, `pagination`, `valueobject`), not one
 package per type — a new value object is a new file inside `valueobject/`,

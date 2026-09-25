@@ -176,6 +176,6 @@ Use `.claude/rules/logging.md` as the source of truth for all logging behavior.
 - Syntax that "doesn't exist" in the standard library
 - API usage patterns - the compiler already validated these
 
-**Go version:** This project uses Go 1.25+. Features like `sync.WaitGroup.Go()` are valid.
+**Go version:** This project uses Go 1.26+. Features like `sync.WaitGroup.Go()` are valid.
 
 **Deliberate placeholders:** Mock/stub implementations (especially for payment, external APIs) are intentional until real implementations are needed. Do not flag these as issues unless they're in production code paths.

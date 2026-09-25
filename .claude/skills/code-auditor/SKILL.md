@@ -16,7 +16,7 @@ The following agents run in parallel to analyze your changes:
 | `rule-keeper` | Audit changes against CLAUDE.md and `.claude/rules/*.md` for violations |
 | `bug-hunter` | Find bugs, both obvious in the diff and ones requiring broader codebase context |
 | `test-guardian` | Check if new/changed code has appropriate test coverage |
-| `gopher` | Tuky Go conventions — domain boundaries, error handling, testing patterns (only if `.go` files changed) |
+| `gopher` | go-template Go conventions — domain boundaries, error handling, testing patterns (only if `.go` files changed) |
 
 ## Steps
 

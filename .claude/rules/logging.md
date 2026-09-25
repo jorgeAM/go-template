@@ -15,7 +15,7 @@ Use structured JSON logging everywhere.
 
 ### App Code
 
-Use the `internal/platform/log` package (`github.com/jorgeAM/tuky-api/internal/platform/log`), backed by `ZapLogger`.
+Use the `internal/platform/log` package (`github.com/jorgeAM/go-template/internal/platform/log`), backed by `ZapLogger`.
 
 All app-code log calls take `context.Context` first, then a stable message, then fields built from `log.With*` option constructors:
 
