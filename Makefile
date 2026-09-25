@@ -40,5 +40,5 @@ migration_down: check-module
 
 check-module:
 ifndef MODULE
-	$(error MODULE is required, e.g. make new_migration MODULE=user MIGRATION_NAME=add_name)
+	$(error MODULE is required, e.g. make new_migration MODULE=identity MIGRATION_NAME=add_name)
 endif

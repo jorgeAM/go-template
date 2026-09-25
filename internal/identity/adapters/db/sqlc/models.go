@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type MySchemaUser struct {
+type IdentityUser struct {
 	ID        string
 	Email     string
 	CreatedAt time.Time

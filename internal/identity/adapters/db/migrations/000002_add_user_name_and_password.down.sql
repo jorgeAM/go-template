@@ -1,6 +1,6 @@
 BEGIN;
 
-ALTER TABLE my_schema.users
+ALTER TABLE identity.users
     DROP COLUMN IF EXISTS name,
     DROP COLUMN IF EXISTS password;
 

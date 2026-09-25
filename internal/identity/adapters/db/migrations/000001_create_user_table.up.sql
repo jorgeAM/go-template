@@ -1,8 +1,8 @@
 BEGIN;
 
-CREATE SCHEMA IF NOT EXISTS my_schema;
+CREATE SCHEMA IF NOT EXISTS identity;
 
-CREATE TABLE IF NOT EXISTS my_schema.users
+CREATE TABLE IF NOT EXISTS identity.users
 (
     id uuid PRIMARY KEY,
     email VARCHAR(255) NOT NULL,

@@ -12,9 +12,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 
+	"github.com/jorgeAM/go-template/internal/identity/domain"
+	identitymock "github.com/jorgeAM/go-template/internal/identity/mocks"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/user/domain"
-	usermock "github.com/jorgeAM/go-template/internal/user/mocks"
 )
 
 func TestServer(t *testing.T) {
@@ -28,7 +28,7 @@ func TestServer(t *testing.T) {
 		method     string
 		path       string
 		body       string
-		mock       func(repo *usermock.MockUserRepository)
+		mock       func(repo *identitymock.MockUserRepository)
 		wantStatus int
 		wantCode   errors.Code
 	}{
@@ -37,7 +37,7 @@ func TestServer(t *testing.T) {
 			method: http.MethodPost,
 			path:   "/api/v1/user",
 			body:   `{"name":"Jorge","email":"jorge@example.com","password":"s3cure-pass"}`,
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().Save(gomock.Any(), gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusCreated,
@@ -47,7 +47,7 @@ func TestServer(t *testing.T) {
 			method:     http.MethodPost,
 			path:       "/api/v1/user",
 			body:       `{"name":"Jorge","email":"not-an-email","password":"s3cure-pass"}`,
-			mock:       func(repo *usermock.MockUserRepository) {},
+			mock:       func(repo *identitymock.MockUserRepository) {},
 			wantStatus: http.StatusBadRequest,
 			wantCode:   errors.BadRequestCode,
 		},
@@ -56,7 +56,7 @@ func TestServer(t *testing.T) {
 			method:     http.MethodPost,
 			path:       "/api/v1/user",
 			body:       `{`,
-			mock:       func(repo *usermock.MockUserRepository) {},
+			mock:       func(repo *identitymock.MockUserRepository) {},
 			wantStatus: http.StatusBadRequest,
 			wantCode:   errors.BadRequestCode,
 		},
@@ -64,7 +64,7 @@ func TestServer(t *testing.T) {
 			name:   "returns a user",
 			method: http.MethodGet,
 			path:   "/api/v1/user/" + user.ID().String(),
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), user.ID()).Return(user, nil)
 			},
 			wantStatus: http.StatusOK,
@@ -73,7 +73,7 @@ func TestServer(t *testing.T) {
 			name:       "rejects an invalid id",
 			method:     http.MethodGet,
 			path:       "/api/v1/user/not-a-uuid",
-			mock:       func(repo *usermock.MockUserRepository) {},
+			mock:       func(repo *identitymock.MockUserRepository) {},
 			wantStatus: http.StatusBadRequest,
 			wantCode:   errors.BadRequestCode,
 		},
@@ -81,7 +81,7 @@ func TestServer(t *testing.T) {
 			name:   "maps a missing user to 404",
 			method: http.MethodGet,
 			path:   "/api/v1/user/" + user.ID().String(),
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), user.ID()).
 					Return(nil, errors.New(domain.ErrUserNotFound, "user not found"))
 			},
@@ -92,7 +92,7 @@ func TestServer(t *testing.T) {
 			name:   "maps a repository failure to 500",
 			method: http.MethodGet,
 			path:   "/api/v1/user/" + user.ID().String(),
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), user.ID()).Return(nil, assert.AnError)
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -105,7 +105,7 @@ func TestServer(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			repo := usermock.NewMockUserRepository(ctrl)
+			repo := identitymock.NewMockUserRepository(ctrl)
 			tt.mock(repo)
 
 			router := chi.NewRouter()

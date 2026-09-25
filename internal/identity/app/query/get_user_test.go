@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 
+	"github.com/jorgeAM/go-template/internal/identity/domain"
+	identitymock "github.com/jorgeAM/go-template/internal/identity/mocks"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/user/domain"
-	usermock "github.com/jorgeAM/go-template/internal/user/mocks"
 )
 
 func TestGetUser(t *testing.T) {
@@ -21,20 +21,20 @@ func TestGetUser(t *testing.T) {
 	tests := []struct {
 		name    string
 		q       *GetUserQuery
-		mock    func(repo *usermock.MockUserRepository)
+		mock    func(repo *identitymock.MockUserRepository)
 		wantErr *errors.ErrorCode
 	}{
 		{
 			name: "returns the user info",
 			q:    &GetUserQuery{UserID: user.ID().String()},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), user.ID()).Return(user, nil)
 			},
 		},
 		{
 			name: "rejects an invalid user id",
 			q:    &GetUserQuery{UserID: "not-a-uuid"},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), gomock.Any()).Times(0)
 			},
 			wantErr: domain.ErrInvalidUser,
@@ -42,7 +42,7 @@ func TestGetUser(t *testing.T) {
 		{
 			name: "keeps not-found from the repository",
 			q:    &GetUserQuery{UserID: user.ID().String()},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), user.ID()).
 					Return(nil, errors.New(domain.ErrUserNotFound, "user not found"))
 			},
@@ -51,7 +51,7 @@ func TestGetUser(t *testing.T) {
 		{
 			name: "maps any other repository failure to internal",
 			q:    &GetUserQuery{UserID: user.ID().String()},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().FindByID(gomock.Any(), user.ID()).Return(nil, assert.AnError)
 			},
 			wantErr: domain.ErrUserInternal,
@@ -63,7 +63,7 @@ func TestGetUser(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			repo := usermock.NewMockUserRepository(ctrl)
+			repo := identitymock.NewMockUserRepository(ctrl)
 			tt.mock(repo)
 
 			res, err := NewGetUser(repo).Handle(context.Background(), tt.q)

@@ -1,4 +1,4 @@
-package user
+package identity
 
 import (
 	"context"
@@ -8,11 +8,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	identitydb "github.com/jorgeAM/go-template/internal/identity/adapters/db"
+	identityhttp "github.com/jorgeAM/go-template/internal/identity/api/http"
+	"github.com/jorgeAM/go-template/internal/identity/domain"
 	"github.com/jorgeAM/go-template/internal/platform/log"
 	"github.com/jorgeAM/go-template/internal/shared/module"
-	userdb "github.com/jorgeAM/go-template/internal/user/adapters/db"
-	userhttp "github.com/jorgeAM/go-template/internal/user/api/http"
-	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
 var _ module.Module = (*Module)(nil)
@@ -27,7 +27,7 @@ func NewModule() *Module {
 }
 
 func (m *Module) Name() module.Name {
-	return "user"
+	return "identity"
 }
 
 func (m *Module) Init(ctx context.Context) (err error) {
@@ -44,7 +44,7 @@ func (m *Module) Init(ctx context.Context) (err error) {
 		),
 	)
 	if err != nil {
-		log.Error(ctx, "user module failed to parse postgres config", log.WithError(err))
+		log.Error(ctx, "identity module failed to parse postgres config", log.WithError(err))
 		return err
 	}
 
@@ -52,7 +52,7 @@ func (m *Module) Init(ctx context.Context) (err error) {
 
 	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
 	if err != nil {
-		log.Error(ctx, "user module failed to create postgres pool", log.WithError(err))
+		log.Error(ctx, "identity module failed to create postgres pool", log.WithError(err))
 		return err
 	}
 
@@ -63,22 +63,22 @@ func (m *Module) Init(ctx context.Context) (err error) {
 	}()
 
 	if err = pool.Ping(ctx); err != nil {
-		log.Error(ctx, "user module failed to connect to postgres", log.WithError(err))
+		log.Error(ctx, "identity module failed to connect to postgres", log.WithError(err))
 		return err
 	}
 
 	m.Pool = pool
-	m.UserRepository = userdb.NewPostgresUserRepository(pool)
+	m.UserRepository = identitydb.NewPostgresUserRepository(pool)
 
-	log.Info(ctx, "user module initialized")
+	log.Info(ctx, "identity module initialized")
 
 	return nil
 }
 
 func (m *Module) RegisterHttp(ctx context.Context, r chi.Router) error {
-	return userhttp.Register(ctx, r, m.UserRepository)
+	return identityhttp.Register(ctx, r, m.UserRepository)
 }
 
 func (m *Module) MigrationFS() fs.FS {
-	return userdb.Migrations()
+	return identitydb.Migrations()
 }

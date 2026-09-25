@@ -7,11 +7,11 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/jorgeAM/go-template/internal/identity/app/command"
+	"github.com/jorgeAM/go-template/internal/identity/app/models"
+	"github.com/jorgeAM/go-template/internal/identity/app/query"
+	"github.com/jorgeAM/go-template/internal/identity/domain"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/user/app/command"
-	"github.com/jorgeAM/go-template/internal/user/app/models"
-	"github.com/jorgeAM/go-template/internal/user/app/query"
-	"github.com/jorgeAM/go-template/internal/user/domain"
 )
 
 var _ StrictServerInterface = (*Server)(nil)

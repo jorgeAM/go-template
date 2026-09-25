@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 
+	"github.com/jorgeAM/go-template/internal/identity/domain"
+	identitymock "github.com/jorgeAM/go-template/internal/identity/mocks"
 	"github.com/jorgeAM/go-template/internal/shared/errors"
-	"github.com/jorgeAM/go-template/internal/user/domain"
-	usermock "github.com/jorgeAM/go-template/internal/user/mocks"
 )
 
 func TestCreateUser(t *testing.T) {
@@ -18,20 +18,20 @@ func TestCreateUser(t *testing.T) {
 	tests := []struct {
 		name    string
 		cmd     *CreateUserCommand
-		mock    func(repo *usermock.MockUserRepository)
+		mock    func(repo *identitymock.MockUserRepository)
 		wantErr *errors.ErrorCode
 	}{
 		{
 			name: "creates the user",
 			cmd:  &CreateUserCommand{Name: "Jorge", Email: "jorge@example.com", Password: "s3cure-pass"},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().Save(gomock.Any(), gomock.AssignableToTypeOf(&domain.User{})).Return(nil)
 			},
 		},
 		{
 			name: "rejects invalid user data without saving",
 			cmd:  &CreateUserCommand{Name: "Jorge", Email: "foo@baz@gmail.com", Password: "s3cure-pass"},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().Save(gomock.Any(), gomock.Any()).Times(0)
 			},
 			wantErr: domain.ErrInvalidUser,
@@ -39,7 +39,7 @@ func TestCreateUser(t *testing.T) {
 		{
 			name: "maps a repository failure to internal",
 			cmd:  &CreateUserCommand{Name: "Jorge", Email: "jorge@example.com", Password: "s3cure-pass"},
-			mock: func(repo *usermock.MockUserRepository) {
+			mock: func(repo *identitymock.MockUserRepository) {
 				repo.EXPECT().Save(gomock.Any(), gomock.Any()).Return(assert.AnError)
 			},
 			wantErr: domain.ErrUserInternal,
@@ -51,7 +51,7 @@ func TestCreateUser(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			repo := usermock.NewMockUserRepository(ctrl)
+			repo := identitymock.NewMockUserRepository(ctrl)
 			tt.mock(repo)
 
 			res, err := NewCreateUser(repo).Handle(context.Background(), tt.cmd)

@@ -1,10 +1,10 @@
 BEGIN;
 
-ALTER TABLE my_schema.users
+ALTER TABLE identity.users
     ADD COLUMN IF NOT EXISTS name VARCHAR(255) NOT NULL DEFAULT '',
     ADD COLUMN IF NOT EXISTS password VARCHAR(255) NOT NULL DEFAULT '';
 
-ALTER TABLE my_schema.users
+ALTER TABLE identity.users
     ALTER COLUMN name DROP DEFAULT,
     ALTER COLUMN password DROP DEFAULT;
 

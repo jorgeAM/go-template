@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/jorgeAM/go-template/internal/user/domain"
+	"github.com/jorgeAM/go-template/internal/identity/domain"
 )
 
 type UserInfo struct {
