@@ -7,6 +7,9 @@ generate:
 unit-tests:
 	go test ./... -cover -v -coverprofile=./coverage.out
 
+integration-tests:
+	@echo "integration-tests: to be implemented soon"
+
 show-cover:
 	go tool cover -html=./coverage.out
 
@@ -15,7 +18,7 @@ tidy:
 	go mod vendor
 
 run:
-	go run cmd/app/*.go
+	go run ./cmd/app | jq '.'
 
 # Migrations
 postgres_url = "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
