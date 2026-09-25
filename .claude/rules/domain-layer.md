@@ -99,8 +99,8 @@ fields, validated in a `New*` constructor, immutable — mutation replaces the
 whole value, there is no partial in-place mutation. This rule extends the
 same shape to entities/aggregates.
 
-Shared value objects in `internal/shared/model/` (`model.Email`,
-`model.Price`, ...) are out of this rule's path scope — they're governed by
+Shared value objects in `internal/shared/valueobject/` (`valueobject.Email`,
+`valueobject.ID`, ...) are out of this rule's path scope — they're governed by
 [shared-folder-structure.md](shared-folder-structure.md) instead. They
 happen to follow the same private-field/`New*`/immutable shape, but that's
 convention, not this rule reaching into `shared/`.

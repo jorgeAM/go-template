@@ -1,13 +1,13 @@
 package domain
 
-import "github.com/jorgeAM/go-template/internal/shared/model"
+import "github.com/jorgeAM/go-template/internal/shared/valueobject"
 
 func UnmarshallUser(
-	id model.ID,
+	id valueobject.ID,
 	name string,
-	email model.Email,
+	email valueobject.Email,
 	hashedPassword string,
-	timestamps model.Timestamps,
+	timestamps valueobject.Timestamps,
 ) *User {
 	return &User{
 		id:             id,

@@ -1,4 +1,4 @@
-package model
+package valueobject
 
 import (
 	"time"
@@ -15,15 +15,4 @@ func NewTimestamps() Timestamps {
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
-}
-
-func (t *Timestamps) Update() *Timestamps {
-	t.UpdatedAt = time.Now()
-	return t
-}
-
-func (t *Timestamps) Delete() *Timestamps {
-	now := time.Now()
-	t.DeletedAt = &now
-	return t
 }
