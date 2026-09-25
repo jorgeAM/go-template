@@ -59,6 +59,8 @@ func Authenticate(next http.Handler) http.Handler {
 	})
 }
 
+const refreshTokenMaxAgeSeconds = 30 * 24 * 3600
+
 func SetAuthCookie(w http.ResponseWriter, token string) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "refresh_token",
@@ -67,7 +69,7 @@ func SetAuthCookie(w http.ResponseWriter, token string) {
 		Secure:   env.GetEnv("APP_ENV", "local") == "production",
 		SameSite: http.SameSiteLaxMode,
 		Path:     "/",
-		MaxAge:   30 * 24 * 3600, // 30 days to match JWT creation
+		MaxAge:   refreshTokenMaxAgeSeconds,
 	})
 }
 

@@ -6,12 +6,7 @@ import (
 )
 
 type RetryConfig struct {
-	// Retries to be executed after first try.
-	// If retry = 0, at least one request will be executed.
-	// If retry > 0, the first request will be executed without considering
-	// this value and after that retries will be considered.
 	Retries int
-	// Sleep time between requests
 	Timeout time.Duration
 }
 

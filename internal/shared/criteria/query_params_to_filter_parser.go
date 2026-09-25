@@ -7,24 +7,20 @@ import (
 )
 
 func convertValueType(value string) interface{} {
-	// Try integer conversion
 	if intVal, err := strconv.Atoi(value); err == nil {
 		return intVal
 	}
 
-	// Try float conversion
 	if floatVal, err := strconv.ParseFloat(value, 64); err == nil {
 		return floatVal
 	}
 
-	// Try boolean conversion
 	if value == "true" {
 		return true
 	} else if value == "false" {
 		return false
 	}
 
-	// Default to string
 	return value
 }
 

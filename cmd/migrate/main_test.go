@@ -8,7 +8,6 @@ import (
 )
 
 func TestBuildDSN(t *testing.T) {
-	// No t.Parallel: buildDSN reads process env, which this test mutates.
 	t.Setenv("POSTGRES_HOST", "db.example.com")
 	t.Setenv("POSTGRES_PORT", "6543")
 	t.Setenv("POSTGRES_USER", "app")

@@ -11,8 +11,8 @@ import (
 	"github.com/jorgeAM/go-template/internal/platform/log"
 	"github.com/jorgeAM/go-template/internal/shared/module"
 	userdb "github.com/jorgeAM/go-template/internal/user/adapters/db"
+	userhttp "github.com/jorgeAM/go-template/internal/user/api/http"
 	"github.com/jorgeAM/go-template/internal/user/domain"
-	userhttp "github.com/jorgeAM/go-template/internal/user/infrastructure/http"
 )
 
 var _ module.Module = (*Module)(nil)
@@ -62,7 +62,6 @@ func (m *Module) Init(ctx context.Context) (err error) {
 		}
 	}()
 
-	// pgxpool connects lazily; ping so a bad DSN fails at startup, not on the first request.
 	if err = pool.Ping(ctx); err != nil {
 		log.Error(ctx, "user module failed to connect to postgres", log.WithError(err))
 		return err
@@ -76,10 +75,8 @@ func (m *Module) Init(ctx context.Context) (err error) {
 	return nil
 }
 
-func (m *Module) RegisterHttp(_ context.Context, r chi.Router) error {
-	userhttp.Register(r, m.UserRepository)
-
-	return nil
+func (m *Module) RegisterHttp(ctx context.Context, r chi.Router) error {
+	return userhttp.Register(ctx, r, m.UserRepository)
 }
 
 func (m *Module) MigrationFS() fs.FS {

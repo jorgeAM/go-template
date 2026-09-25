@@ -12,12 +12,12 @@ var (
 type ItemType string
 
 const (
-	Bag      ItemType = "BAG"      // 🎒
-	Suitcase ItemType = "SUITCASE" // 🧳
-	Cap      ItemType = "CAP"      // 🧢
-	Bike     ItemType = "BIKE"     // 🚲
-	Car      ItemType = "CAR"      // 🚗
-	Other    ItemType = "OTHER"    // 🤷‍♂️
+	Bag      ItemType = "BAG"
+	Suitcase ItemType = "SUITCASE"
+	Cap      ItemType = "CAP"
+	Bike     ItemType = "BIKE"
+	Car      ItemType = "CAR"
+	Other    ItemType = "OTHER"
 )
 
 var allowedItemType = map[string]ItemType{

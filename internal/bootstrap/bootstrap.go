@@ -1,5 +1,3 @@
-// Package bootstrap holds the one module list, so cmd/app (server) and
-// cmd/migrate (migrations) wire a new module in from a single place.
 package bootstrap
 
 import (
