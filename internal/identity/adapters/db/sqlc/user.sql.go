@@ -16,19 +16,9 @@ FROM identity.users
 WHERE id = $1
 `
 
-type FindUserByIDRow struct {
-	ID        string
-	Name      string
-	Email     string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-}
-
-func (q *Queries) FindUserByID(ctx context.Context, id string) (FindUserByIDRow, error) {
+func (q *Queries) FindUserByID(ctx context.Context, id string) (IdentityUser, error) {
 	row := q.db.QueryRow(ctx, findUserByID, id)
-	var i FindUserByIDRow
+	var i IdentityUser
 	err := row.Scan(
 		&i.ID,
 		&i.Name,

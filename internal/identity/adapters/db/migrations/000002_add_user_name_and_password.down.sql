@@ -1,7 +1,0 @@
-BEGIN;
-
-ALTER TABLE identity.users
-    DROP COLUMN IF EXISTS name,
-    DROP COLUMN IF EXISTS password;
-
-COMMIT;

@@ -9,7 +9,7 @@ import (
 )
 
 type Querier interface {
-	FindUserByID(ctx context.Context, id string) (FindUserByIDRow, error)
+	FindUserByID(ctx context.Context, id string) (IdentityUser, error)
 	SaveUser(ctx context.Context, arg SaveUserParams) error
 }
 
