@@ -96,8 +96,20 @@ func TestMyPackage_Integration(t *testing.T) {
 }
 ```
 
-Container setup pattern (pooling, shared lifecycle across tests) will be defined once the
-first integration test is written — do not invent helper names ahead of that.
+Container setup follows `internal/identity/adapters/db/postgres_user_repository_integration_test.go`:
+
+- One container per test function: `postgres.Run(...)` from
+  `github.com/testcontainers/testcontainers-go/modules/postgres`, registered with
+  `testcontainers.CleanupContainer(t, container)` right after `Run` so it is removed even on
+  failure.
+- Schema comes from the module's own embedded `Migrations()` (`*.up.sql` applied in order) —
+  never a hand-written copy of the schema.
+- Subtests share that container and use fresh IDs (`domain.NewUser`, `valueobject.NewUUIDv7`)
+  instead of truncating tables between cases.
+- Setup helpers (`startPostgres`, `applyMigrations`) stay private to the test file. Extract a
+  shared helper only once a second module's integration test needs the exact same setup.
+
+Run with `make integration-tests` (requires Docker). CI runs them on every PR.
 
 ## Test Organization
 
