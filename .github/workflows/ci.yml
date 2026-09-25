@@ -30,5 +30,8 @@ jobs:
         - name: Verify deps tidy
           run: go mod download && git diff --exit-code go.mod go.sum
 
-        - name: Tests
+        - name: Unit tests
           run: go test -v ./...
+
+        - name: Integration tests
+          run: go test ./... -tags=integration -run Integration -v
