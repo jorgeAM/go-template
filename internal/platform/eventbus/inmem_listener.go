@@ -33,7 +33,7 @@ func (i *InMemoryListener) Listen(ctx context.Context) {
 			for _, event := range i.bus.Drain() {
 				handler, ok := i.handlers[event.Topic]
 				if !ok {
-					log.Warn(ctx, "event don't have handler", log.WithString("topic", event.Topic.String()), log.WithObject("event", event))
+					log.Warn(ctx, "event don't have handler", log.WithString("topic", event.Topic.String()), log.WithString("event_id", event.ID))
 					i.unhandled = append(i.unhandled, event)
 					continue
 				}
